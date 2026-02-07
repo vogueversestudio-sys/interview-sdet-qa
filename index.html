@@ -760,7 +760,11 @@
             if (cache[item.file]) {
                 md = cache[item.file];
             } else {
-                const res = await fetch('content/' + item.file);
+                let res = await fetch('content/' + item.file);
+                if (!res.ok) {
+                    // Fallback to GitHub raw URL (for GitHub Pages deployment)
+                    res = await fetch('https://raw.githubusercontent.com/vogueversestudio-sys/interview-sdet-qa/main/' + item.file);
+                }
                 if (!res.ok) throw new Error('File not found: ' + item.file);
                 md = await res.text();
                 cache[item.file] = md;
