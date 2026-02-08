@@ -155,6 +155,8 @@ public class LoginTest extends BaseTest {
 
 ## Q2. How to connect files in Cucumber? What are hooks? (from Screenshot 3)
 
+**Cucumber** is a BDD framework that connects business-readable feature files (Gherkin) to Java step definitions via a **Test Runner** class. The runner uses `@CucumberOptions` to specify the path to feature files (`features`) and the package containing step definitions (`glue`). **Hooks** (`@Before`, `@After`, `@BeforeStep`, `@AfterStep`) provide setup/teardown logic similar to TestNG annotations but scoped to Cucumber scenarios.
+
 **Cucumber File Structure:**
 ```
 src/test/
@@ -279,6 +281,8 @@ public class Hooks {
 
 ## Q4. Explain Maven lifecycle? (from Screenshot 3 — frequently asked)
 
+**Maven** is a build automation and dependency management tool. It uses `pom.xml` to define project structure, dependencies, and build plugins. The **build lifecycle** is a sequence of phases — each phase executes all previous phases automatically.
+
 **Maven Build Lifecycle Phases:**
 
 | Phase | What It Does | Command |
@@ -398,6 +402,8 @@ mvn allure:serve
 ---
 
 ## Q5. Git commands you use daily? (from Screenshot 3 — very frequently asked)
+
+**Git** is a distributed version control system. Every developer has a full copy of the repository. Key concepts: **staging area** (index between working directory and commits), **branches** (lightweight pointers to commits), and **remotes** (connections to shared repositories like GitHub/GitLab).
 
 ```bash
 # --- BASIC COMMANDS ---
@@ -560,6 +566,10 @@ main ─────────────────────────
 
 ## Q8. Explain CI/CD integration of test automation in Jenkins/GitHub Actions? (Wipro — Screenshot 2)
 
+**CI (Continuous Integration)** automatically builds and tests code on every commit. **CD (Continuous Delivery/Deployment)** automatically deploys to staging/production after tests pass.
+
+**For SDETs:** CI/CD means your automation suite runs automatically on every code change — catching bugs before they reach production. Key components: source control trigger → build → test execution → report generation → notification.
+
 **Jenkins Pipeline (Declarative):**
 
 ```groovy
@@ -695,6 +705,8 @@ jobs:
 
 ## Q9. Docker for Test Automation (trending in 2026)
 
+**Docker** packages applications and their dependencies into lightweight, portable **containers** that run identically on any machine. For SDETs, Docker solves the "works on my machine" problem by ensuring identical browser versions, driver versions, and OS configurations across local, CI, and production environments.
+
 **Why Docker for testing?**
 - **Consistent environment** — same browser/driver versions everywhere
 - **Parallel execution** — spin up multiple browser containers
@@ -765,6 +777,8 @@ mvn test -Dselenium.grid.url=http://localhost:4444
 ---
 
 ## Q10. What is Page Object Model (POM) and how do you implement it? (Wipro — Screenshot 2)
+
+**POM** is the most widely used design pattern in Selenium automation. It creates an **abstraction layer** between tests and UI elements — tests describe *what* to do, page objects describe *how* to do it. If the UI changes, only the page object needs updating; all tests remain untouched.
 
 **POM Principles:**
 1. Each **web page** = separate **Java class**
@@ -911,6 +925,8 @@ A **Sprint Retrospective** is a meeting held at the **end of each sprint** where
 
 ## Q14. What is Performance Testing? (trending in 2026 — from Screenshot 4 LinkedIn profile)
 
+**Performance testing** validates that the application meets speed, scalability, and stability requirements under various load conditions. As an SDET, you should know the **types** of performance testing, common tools, and how to interpret results (response time, throughput, error rate, percentiles P95/P99).
+
 | Type | What It Tests | Tool |
 |------|-------------|------|
 | **Load Testing** | Behavior under expected user load | JMeter, k6, Gatling |
@@ -957,6 +973,8 @@ export default function () {
 ---
 
 ## Q15. What is API Security Testing? (trending in 2026)
+
+**API security testing** verifies that APIs are protected against common vulnerabilities listed in the **OWASP API Security Top 10**. As an SDET, you should automate basic security checks as part of the regression suite — authentication, authorization, injection attacks, and rate limiting.
 
 **Common API Security Tests:**
 
