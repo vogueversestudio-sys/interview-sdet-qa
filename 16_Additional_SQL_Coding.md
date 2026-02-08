@@ -36,6 +36,7 @@ INSERT INTO employees VALUES
 ---
 
 ## SQ1. Find employees with salary greater than Adam's salary (from Screenshot 3)
+**Approach:** Use a **subquery** to get Adam's salary, then filter. Alternative: **self JOIN** to compare directly. Subquery is simpler; JOIN is more flexible for complex comparisons.
 
 ```sql
 -- Method 1: Subquery
@@ -53,6 +54,11 @@ WHERE e.salary > adam.salary;
 ---
 
 ## SQ2. Find the Nth highest salary (multiple methods — very frequently asked)
+This is the **#1 most asked SQL coding question**. Know at least 3 methods:
+1. **DENSE_RANK()** — best approach, handles ties correctly
+2. **LIMIT + OFFSET** — MySQL-specific, simple but doesn't handle ties
+3. **Correlated subquery** — works without window functions
+4. **CTE + DENSE_RANK** — cleanest and most readable
 
 ```sql
 -- Method 1: DENSE_RANK (handles duplicates correctly)
@@ -87,6 +93,7 @@ SELECT salary FROM RankedSalaries WHERE rank = 3;
 ---
 
 ## SQ3. Find the top 3 highest paid employees in each department
+**Approach:** Use `DENSE_RANK()` with `PARTITION BY department` to rank employees within each department separately. Filter where rank ≤ 3. This is a very common follow-up to the Nth salary question.
 
 ```sql
 WITH RankedByDept AS (
@@ -103,6 +110,7 @@ ORDER BY department, dept_rank;
 ---
 
 ## SQ4. Find employees who earn more than their manager
+**Approach:** **Self JOIN** — join the employees table with itself, matching `employee.manager_id = manager.id`. Then filter where employee salary > manager salary. Classic self-join interview question.
 
 ```sql
 SELECT e.name AS employee, e.salary AS emp_salary,
@@ -115,6 +123,7 @@ WHERE e.salary > m.salary;
 ---
 
 ## SQ5. Find departments where average salary is greater than overall average
+**Approach:** Use `HAVING` with a subquery that calculates the overall average. `HAVING` filters groups (after GROUP BY), unlike `WHERE` which filters individual rows.
 
 ```sql
 SELECT department, AVG(salary) AS avg_salary
@@ -163,6 +172,7 @@ WHERE rank = 2;
 ---
 
 ## SQ8. Find employees with consecutive IDs (gap detection)
+**Gap detection** finds missing values in a sequence. Uses a correlated subquery to check if the next ID exists. Useful for finding missing records, time gaps, or sequence breaks.
 
 ```sql
 -- Find gaps in ID sequence
@@ -178,6 +188,7 @@ AND id < (SELECT MAX(id) FROM employees);
 ---
 
 ## SQ9. Pivot / Transpose rows to columns
+**Pivoting** converts row values into column headers. In databases without native `PIVOT` support, use `CASE` inside aggregate functions. Each `CASE` expression creates one output column.
 
 ```sql
 -- Count employees per department (pivot)
@@ -204,6 +215,7 @@ ORDER BY avg_salary DESC;
 ---
 
 ## SQ10. Running total / Cumulative sum
+**Window functions** with `OVER (ORDER BY ...)` compute running aggregates without collapsing rows. `SUM() OVER (ORDER BY hire_date)` gives cumulative sum. `ROWS BETWEEN 2 PRECEDING AND CURRENT ROW` creates a sliding window for moving averages.
 
 ```sql
 SELECT name, salary,
@@ -258,6 +270,10 @@ HAVING COUNT(*) > 3;
 ---
 
 ## SQ14. Delete duplicate rows (keep one copy)
+**Three approaches** from most elegant to most portable:
+1. **CTE + ROW_NUMBER** — cleanest; partition by duplicate columns, delete where row_num > 1
+2. **DELETE with MIN(id)** — keep the first occurrence, delete rest
+3. **Temp table** — most portable; copy distinct rows, truncate, reinsert
 
 ```sql
 -- Method 1: Using CTE + ROW_NUMBER
@@ -286,6 +302,7 @@ DROP TABLE temp_employees;
 ---
 
 ## SQ15. LEAD and LAG — compare with next/previous row
+**LEAD()** looks at the **next** row; **LAG()** looks at the **previous** row in the ordered result set. Both are window functions that enable row-to-row comparisons without self-joins. Essential for trend analysis, gap detection, and calculating differences between consecutive records.
 
 ```sql
 -- Compare each employee's salary with the next higher salary
@@ -331,6 +348,7 @@ HAVING SUM(salary) = (
 ---
 
 ## SQ17. String Functions frequently asked in interviews
+String manipulation is common in data cleaning and validation queries. Know the key functions: `CONCAT`, `SUBSTRING`, `LENGTH`, `UPPER`/`LOWER`, `TRIM`, `REPLACE`, `REVERSE`, and `POSITION`/`INSTR`. Syntax varies slightly between MySQL, PostgreSQL, and SQL Server.
 
 ```sql
 -- Concatenation
@@ -363,6 +381,7 @@ SELECT name, INSTR(name, 'a') AS a_position FROM employees;       -- MySQL
 ---
 
 ## SQ18. Date Functions frequently asked
+Date functions are **database-specific** — syntax differs significantly between MySQL, PostgreSQL, SQL Server, and Oracle. Know how to: get current date, extract parts (year/month/day), calculate date differences, format dates, and filter by date ranges.
 
 ```sql
 -- Current date/time
@@ -419,6 +438,7 @@ ROLLBACK;
 ---
 
 ## SQ20. Common Table Expression (CTE) — Recursive (advanced)
+**Recursive CTEs** reference themselves to process hierarchical/tree-structured data. Structure: **base case** (anchor member) + `UNION ALL` + **recursive case** (references the CTE itself). Terminates when the recursive case returns no rows. Common uses: org charts, file trees, bill of materials.
 
 ```sql
 -- Recursive CTE: Find employee hierarchy (org chart)
@@ -468,6 +488,7 @@ WHERE salary BETWEEN
 ---
 
 ## SQ22. Write a query to find all combinations (CROSS JOIN)
+**CROSS JOIN** produces the **cartesian product** — every row from table A paired with every row from table B. Practical SDET use case: generating a **test matrix** of all browser × OS × resolution combinations for cross-browser testing.
 
 ```sql
 -- Find all possible employee-department combinations
@@ -511,6 +532,7 @@ FROM employees;
 ---
 
 ## SQ24. COALESCE and IFNULL — handle NULLs
+**COALESCE** is the SQL standard function that returns the **first non-NULL** value from a list of arguments. It works on all databases. `IFNULL` (MySQL), `ISNULL` (SQL Server), and `NVL` (Oracle) are database-specific equivalents that accept only 2 arguments.
 
 ```sql
 -- COALESCE — returns first non-NULL value
