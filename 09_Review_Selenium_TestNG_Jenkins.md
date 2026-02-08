@@ -45,6 +45,12 @@ WebElement el = fluentWait.until(d -> d.findElement(By.id("dynamic-element")));
 
 ## Q2. How to handle frames?
 
+A **frame (iframe)** is an HTML document embedded inside another HTML document. Selenium cannot directly interact with elements inside a frame — you must first **switch to the frame's context**.
+
+**Three ways to switch:** by name/ID, by index (0-based), or by WebElement reference. After interacting, use `defaultContent()` to return to the main page or `parentFrame()` for nested frames.
+
+**Interview tip:** This is one of the most commonly asked Selenium questions. Always mention nested frames and the need to switch back.
+
 ```java
 // Switch by name or ID
 driver.switchTo().frame("frameName");
@@ -74,6 +80,12 @@ driver.switchTo().defaultContent();       // back to main
 ---
 
 ## Q3. How to send text to a focused element?
+
+Multiple approaches to enter text in Selenium, from standard to workaround methods:
+- **`sendKeys()`** — standard approach, works for most visible input elements
+- **`Actions.sendKeys()`** — sends keys to the currently focused element (no element reference needed)
+- **`JavaScriptExecutor`** — directly sets the `value` property via JS; useful for hidden or read-only fields
+- **Key combinations** — select all + delete + type new text for replacing existing content
 
 ```java
 // Method 1: sendKeys on element
@@ -290,6 +302,15 @@ driver.switchTo().window(mainWindow);
 
 ## Q10. How to handle alerts?
 
+**Alerts** are JavaScript dialog boxes that Selenium cannot interact with using normal `findElement`. You must switch to the alert context first using `driver.switchTo().alert()`.
+
+**Three types of alerts:**
+1. **Simple alert** — message + OK button → `alert.accept()`
+2. **Confirm alert** — message + OK + Cancel → `alert.accept()` or `alert.dismiss()`
+3. **Prompt alert** — input field + OK + Cancel → `alert.sendKeys("text")` then `alert.accept()`
+
+**Best practice:** Always use `ExpectedConditions.alertIsPresent()` before switching to avoid `NoAlertPresentException`.
+
 ```java
 // Switch to alert
 Alert alert = driver.switchTo().alert();
@@ -314,6 +335,12 @@ wait.until(ExpectedConditions.alertIsPresent());
 ---
 
 ## Q11. How to handle dropdowns?
+
+Selenium provides the **`Select` class** specifically for `<select>` HTML elements. For custom dropdowns (Bootstrap, Material UI, React Select), you must click to open and then click the option — `Select` class won't work.
+
+**Three selection methods:** `selectByValue()` (HTML value attribute), `selectByVisibleText()` (display text), `selectByIndex()` (0-based position).
+
+**Interview tip:** Always mention the difference between native `<select>` dropdowns and custom/dynamic dropdowns — interviewers often ask this follow-up.
 
 ```java
 // Using Select class (for <select> elements only)
@@ -350,6 +377,11 @@ driver.findElement(By.xpath("//li[text()='India']")).click();    // select optio
 
 ## Q12. How to perform drag and drop?
 
+Drag and drop uses the **`Actions` class** to simulate mouse operations. Three methods from most standard to most reliable:
+1. **`dragAndDrop(source, target)`** — simplest but sometimes fails with modern frameworks
+2. **`clickAndHold` + `moveToElement` + `release`** — more reliable, simulates actual mouse movement
+3. **JavaScript approach** — last resort when Actions class fails (common with HTML5 drag-and-drop)
+
 ```java
 WebElement source = driver.findElement(By.id("draggable"));
 WebElement target = driver.findElement(By.id("droppable"));
@@ -375,6 +407,12 @@ String js = "function dnd(s,t){var e=document.createEvent('MouseEvent');" +
 ---
 
 ## Q13. How to take screenshots?
+
+Screenshots are essential for **debugging test failures** and **test evidence**. Selenium supports three output formats: `FILE` (save to disk), `BASE64` (embed in HTML reports), and `BYTES` (attach to Allure/Extent reports).
+
+**Best practice:** Capture screenshots automatically on test failure using **TestNG Listeners** (`ITestListener.onTestFailure`) — never rely on manual screenshot calls in tests.
+
+**Selenium 4** added element-level screenshots: `element.getScreenshotAs()` — captures just one element instead of the full page.
 
 ```java
 // Full page screenshot
@@ -408,6 +446,13 @@ public class TestListener implements ITestListener {
 
 ## Q14. How to launch browsers?
 
+Browser driver management has evolved significantly:
+1. **Manual setup** (old) — download driver binary, set system property path
+2. **WebDriverManager** (popular) — auto-downloads matching driver version
+3. **Selenium Manager** (Selenium 4.6+) — built-in auto-management, no external dependency needed
+
+**ChromeOptions** allows configuring headless mode, window size, disable notifications, proxy settings, and experimental features. **Always use headless mode in CI/CD** for faster, more stable execution.
+
 ```java
 // Method 1: System property (old way — Selenium 3)
 System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
@@ -434,6 +479,13 @@ WebDriver driver = new ChromeDriver(options);
 ---
 
 ## Q15. How to check if element is present?
+
+**Three element state checks:**
+- **`isDisplayed()`** — element exists in DOM AND is visible on page (not hidden by CSS)
+- **`isEnabled()`** — element is interactable (not disabled)
+- **`isSelected()`** — for checkboxes/radio buttons, checks if selected
+
+**Safe existence check:** Use `findElements()` (returns empty list, no exception) instead of `findElement()` (throws exception). For dynamic content, combine with **Explicit Wait** using `ExpectedConditions`.
 
 ```java
 // Method 1: isDisplayed() — checks visibility (throws exception if not in DOM)
@@ -465,6 +517,10 @@ try {
 
 ## Q16. TestNG Annotation Execution Order?
 
+**TestNG** provides 10 lifecycle annotations that control **setup and teardown** at different levels. Understanding the execution order is critical for proper resource management (browser setup/teardown, data preparation, report generation).
+
+**Key insight:** `@BeforeSuite`/`@AfterSuite` run once for the entire suite (DB setup, server start). `@BeforeMethod`/`@AfterMethod` run before/after each `@Test` method (browser refresh, clear cookies). This is one of the **most frequently asked TestNG questions** in interviews.
+
 ```
 @BeforeSuite    → runs ONCE before all tests in suite
 @BeforeTest     → runs before each <test> tag in testng.xml
@@ -492,6 +548,10 @@ try {
 ---
 
 ## Q17. Parallel Execution in TestNG?
+
+**Parallel execution** runs multiple tests simultaneously across different threads, dramatically reducing execution time. Configured in `testng.xml` using the `parallel` attribute and `thread-count`.
+
+**Key consideration:** Tests must be **thread-safe** — no shared mutable state. Use `ThreadLocal<WebDriver>` to maintain separate browser instances per thread. Avoid static variables that multiple threads could overwrite.
 
 ```xml
 <!-- Parallel at test level -->
@@ -529,6 +589,10 @@ try {
 
 ## Q18. Priorities in TestNG?
 
+**Priorities** control the execution order of test methods within a class. Lower number = higher priority = runs first. Default priority is 0.
+
+**Important:** Priorities don't guarantee order across classes — only within the same class. For cross-class ordering, use `dependsOnMethods` or `dependsOnGroups`. Tests with the same priority run in **alphabetical order**.
+
 ```java
 @Test(priority = 1)  // runs first
 public void testLogin() { }
@@ -548,6 +612,14 @@ public void testHomePage() { }
 ---
 
 ## Q19. Dependencies in TestNG?
+
+**Test dependencies** ensure one test runs only after its prerequisite passes. If the prerequisite fails, dependent tests are **skipped** (not failed) by default.
+
+**Two types:**
+- **Method dependency** (`dependsOnMethods`) — depends on specific test methods
+- **Group dependency** (`dependsOnGroups`) — depends on all methods in a group
+
+**`alwaysRun = true`** — soft dependency; the dependent test runs even if the prerequisite fails (useful for cleanup methods like logout).
 
 ```java
 // Method dependency
@@ -574,6 +646,13 @@ public void testLogout() { }
 ---
 
 ## Q20. How to Rerun Failed Tests?
+
+Re-running failed tests is essential for handling **flaky tests** (tests that fail intermittently due to timing, network, or environment issues). TestNG provides two approaches:
+
+1. **testng-failed.xml** — auto-generated file listing only failed tests; rerun it manually or in CI
+2. **`IRetryAnalyzer`** — programmatic retry; automatically reruns a failed test up to N times before marking it as failed
+
+**Best practice:** Apply `RetryAnalyzer` globally using `IAnnotationTransformer` listener instead of adding `retryAnalyzer` to each `@Test`.
 
 ```
 After test execution, TestNG creates:
@@ -621,6 +700,10 @@ public class RetryListener implements IAnnotationTransformer {
 
 ## Q21. Run Test N Times?
 
+`invocationCount` runs a test method multiple times — useful for **stress testing** a specific scenario or verifying **test stability** (detecting flaky behavior).
+
+Combine with `threadPoolSize` to run invocations in **parallel threads** and `timeOut` to set a per-invocation time limit.
+
 ```java
 // Run test 10 times
 @Test(invocationCount = 10)
@@ -651,6 +734,10 @@ public void testParallelRepeat() { }
 ---
 
 ## Q23. Groups in TestNG?
+
+**Groups** categorize tests (smoke, regression, sanity, api, ui) so you can run specific subsets. A test can belong to **multiple groups**. Configure which groups to include/exclude in `testng.xml`.
+
+**Interview tip:** Groups are essential for CI/CD — run `smoke` tests on every commit (fast feedback), `regression` nightly, and `sanity` before release.
 
 ```java
 @Test(groups = {"smoke"})
@@ -687,6 +774,14 @@ public void testAdvancedFilter() { }
 ---
 
 ## Q24. Jenkins Pipeline Configuration?
+
+**Jenkins Pipeline** defines the CI/CD workflow as code (`Jenkinsfile`), stored in version control alongside the project. **Declarative Pipeline** (shown below) is the recommended approach with structured syntax.
+
+**Key sections:**
+- **`parameters`** — user inputs (browser, environment, suite file)
+- **`triggers`** — cron schedules and SCM polling
+- **`stages`** — sequential steps (checkout → build → test → report)
+- **`post`** — actions after pipeline (always, failure, success) for cleanup and notifications
 
 ```groovy
 // Jenkinsfile (Declarative Pipeline)
@@ -759,6 +854,8 @@ pipeline {
 
 ## Q25. Command to run tests in Jenkins?
 
+Jenkins executes tests via shell commands in the pipeline's `stages` section. The exact command depends on the build tool and test framework:
+
 ```bash
 # Maven + TestNG
 mvn test
@@ -786,6 +883,14 @@ pytest tests/ -m smoke --html=report.html -n 4
 | **Email Extension** | Email reports on failure | SMTP configuration needed |
 
 ## Q27. pom.xml explained?
+
+**pom.xml** (Project Object Model) is Maven's configuration file that defines the project's **dependencies**, **build plugins**, and **properties**. Maven automatically downloads dependencies from Maven Central repository.
+
+**Key sections:**
+- **`<properties>`** — version variables for easy management
+- **`<dependencies>`** — external libraries (Selenium, TestNG, RestAssured, Allure)
+- **`<build><plugins>`** — build plugins (surefire-plugin connects Maven to TestNG)
+- **`<scope>test</scope>`** — dependency only available during test phase, not in production build
 
 ```xml
 <project>
@@ -942,6 +1047,14 @@ position()       → //ul/li[position()<=3]
 
 ## Q30. Actions Class — keyboard & mouse operations?
 
+The **`Actions` class** simulates complex user interactions that `click()` and `sendKeys()` alone cannot handle. It uses the **Builder pattern** — chain multiple actions and execute with `.perform()`.
+
+**Mouse operations:** hover, click, double-click, right-click, drag-and-drop, scroll
+**Keyboard operations:** key combinations (Ctrl+A, Ctrl+C), Tab, Enter, function keys
+**Composite actions:** combine multiple steps (hover menu → wait → click sub-item)
+
+**Selenium 4** added `scrollToElement()` — replaces JavaScript scroll workarounds.
+
 ```java
 Actions actions = new Actions(driver);
 
@@ -1007,6 +1120,12 @@ new WebDriverWait(driver, Duration.ofSeconds(10)).until(
 ---
 
 ## Q32. How to handle file upload and download?
+
+**File upload** — two approaches:
+1. **`sendKeys("/path/to/file")` on `input[type='file']`** — standard and preferred. Works when the upload element is a native file input.
+2. **Robot class** — for custom upload buttons that open OS file dialogs. Simulates keyboard actions (paste file path + Enter).
+
+**File download** — configure browser preferences to auto-download without prompts. Set a known download directory and verify the file exists with a wait condition.
 
 ```java
 // FILE UPLOAD — Method 1: sendKeys to input[type='file']
