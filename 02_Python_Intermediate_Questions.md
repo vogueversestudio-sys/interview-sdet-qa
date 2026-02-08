@@ -10,8 +10,10 @@
 ## B1. Object-Oriented Programming (OOP)
 
 ### Q25. Four pillars of OOP in Python?
+OOP (Object-Oriented Programming) is built on four fundamental pillars that help organize code into reusable, maintainable structures. In SDET work, OOP is crucial for designing **Page Object Models**, **test frameworks**, and **utility classes**.
 
 **1. Encapsulation:**
+Bundling data (attributes) and methods that operate on that data into a single unit (class), while restricting direct access to internal state. Python uses naming conventions: `_protected` (single underscore) and `__private` (double underscore, name-mangled).
 ```python
 class BankAccount:
     def __init__(self):
@@ -26,6 +28,8 @@ class BankAccount:
 ```
 
 **2. Inheritance:**
+A mechanism where a child class inherits attributes and methods from a parent class, promoting code reuse. In SDET, we use inheritance for base test classes, base page objects, and shared utilities.
+
 ```python
 class Animal:
     def speak(self):
@@ -37,6 +41,8 @@ class Dog(Animal):
 ```
 
 **3. Polymorphism:**
+"Many forms" — the ability of different classes to respond to the same method call in their own way. Achieved through method overriding (runtime) and duck typing in Python.
+
 ```python
 class Cat(Animal):
     def speak(self):
@@ -47,6 +53,8 @@ for animal in [Dog(), Cat()]:
 ```
 
 **4. Abstraction:**
+Hiding complex implementation details and exposing only the necessary interface. Python uses the `abc` module (Abstract Base Class) to enforce that child classes implement required methods.
+
 ```python
 from abc import ABC, abstractmethod
 
@@ -85,6 +93,12 @@ print(D.__mro__)
 ```
 
 ### Q27. `@staticmethod` vs `@classmethod` vs instance method?
+- **Instance method** — takes `self` as first parameter, can access both instance and class data. Most common type.
+- **Class method** (`@classmethod`) — takes `cls` as first parameter, can access class-level data but NOT instance data. Used for factory methods and alternative constructors.
+- **Static method** (`@staticmethod`) — no `self` or `cls`. Just a regular function namespaced inside the class. Used for utility functions logically related to the class.
+
+**SDET example:** In a framework, `@staticmethod` for utility helpers, `@classmethod` for browser factory methods, instance methods for page interactions.
+
 ```python
 class MyClass:
     class_var = 0
@@ -109,6 +123,10 @@ class MyClass:
 | Access class | Yes | Yes | No |
 
 ### Q28. Dunder (magic) methods?
+**Dunder** (double underscore) or **magic methods** are special methods surrounded by `__` that Python calls automatically in response to certain operations. They allow you to define how objects behave with built-in operations like `+`, `==`, `len()`, `print()`, `in`, and `for` loops.
+
+**Why important for SDET:** Custom assertion messages (`__str__`, `__repr__`), comparable test results (`__eq__`, `__lt__`), iterable test data (`__iter__`, `__next__`), and callable test objects (`__call__`).
+
 ```python
 class Vector:
     def __init__(self, x, y):
@@ -161,6 +179,10 @@ print(repr(d))   # datetime.date(2026, 2, 7)
 **Rule:** Always implement `__repr__`. `__str__` falls back to `__repr__` if missing.
 
 ### Q30. Properties in Python?
+**Properties** allow you to define getter, setter, and deleter methods that are accessed like regular attributes. They enable **controlled access** to private attributes — you can add validation, logging, or computed values without changing the calling code.
+
+**Why use properties instead of getters/setters?** Pythonic approach — `obj.name` is cleaner than `obj.get_name()`. Properties let you start with simple attributes and add logic later without breaking existing code.
+
 ```python
 class Temperature:
     def __init__(self, celsius=0):
@@ -186,6 +208,10 @@ t.celsius = 37       # uses setter
 ```
 
 ### Q31. Multiple inheritance & diamond problem?
+**Multiple inheritance** means a class inherits from more than one parent class. The **diamond problem** occurs when two parent classes inherit from the same grandparent, creating ambiguity about which method to call.
+
+Python resolves this using **MRO (Method Resolution Order)** with **C3 Linearization** algorithm — it creates a deterministic, left-to-right, depth-first order. Use `ClassName.__mro__` or `ClassName.mro()` to inspect the resolution order.
+
 ```python
 class A:
     def greet(self): print("A")
@@ -207,7 +233,12 @@ Use `super()` for cooperative multiple inheritance.
 ## B2. Decorators
 
 ### Q32. What are decorators?
-A function that wraps another function to extend its behavior.
+A **decorator** is a function that takes another function as input, adds some functionality (wraps it), and returns the enhanced function — all **without modifying the original function's code**. The `@decorator` syntax is syntactic sugar for `func = decorator(func)`.
+
+**Key concepts:**
+- Always use `@functools.wraps(func)` inside your decorator to preserve the original function's `__name__`, `__doc__`, and other metadata
+- Decorators are heavily used in test frameworks: `@pytest.fixture`, `@pytest.mark.parametrize`, `@retry`, `@allure.step`
+- They follow the **Open/Closed Principle** — open for extension, closed for modification
 
 ```python
 # Basic decorator
@@ -255,6 +286,8 @@ def flaky_api_call():
 ```
 
 ### Q33. Class-based decorators?
+Instead of using a function, you can create decorators using a **class with `__call__`** method. This is useful when you need to **maintain state** across multiple calls (e.g., counting invocations, caching results). The `__init__` receives the decorated function, and `__call__` is invoked every time the decorated function is called.
+
 ```python
 class CountCalls:
     def __init__(self, func):
@@ -279,7 +312,11 @@ say_hello()  # say_hello called 2 times
 ## B3. Generators & Iterators
 
 ### Q34. Generators?
-Use `yield` to produce values lazily (one at a time).
+A **generator** is a special function that uses `yield` instead of `return` to produce a sequence of values **lazily** (one at a time, on demand). Unlike regular functions that compute all values and return a list (consuming memory), generators produce values only when requested — making them **memory-efficient** for large datasets.
+
+**How it works:** When `yield` is encountered, the function's state is **frozen** (local variables, instruction pointer) and the yielded value is returned. On the next call to `next()`, execution resumes from where it left off.
+
+**SDET use cases:** Reading large log files line-by-line, generating test data streams, paginated API responses, and processing large CSV test datasets.
 
 ```python
 def fibonacci(n):
@@ -330,7 +367,8 @@ for num in Countdown(5):
 ```
 
 ### Q36. `yield from`?
-Delegates to a sub-generator.
+`yield from` **delegates** iteration to another iterable or sub-generator. Instead of manually looping and yielding each item from a nested generator, `yield from` does it in a single statement — cleaner and more efficient. It also properly propagates `send()`, `throw()`, and `close()` calls to the sub-generator.
+
 ```python
 def inner():
     yield 1
@@ -348,6 +386,14 @@ list(outer())  # [1, 2, 3]
 ## B4. Exception Handling
 
 ### Q37. Exception handling syntax?
+Python uses `try/except/else/finally` blocks for exception handling:
+- **`try`** — code that might raise an exception
+- **`except`** — handles specific exceptions (catch most specific first)
+- **`else`** — runs **only if no exception** occurred (good for code that should run on success)
+- **`finally`** — **always runs** regardless of exceptions (cleanup: close files, release resources)
+
+**Best practices:** Never use bare `except:` — always catch specific exceptions. Use `except Exception as e` to log the error message.
+
 ```python
 try:
     result = 10 / 0
@@ -364,6 +410,10 @@ finally:
 ```
 
 ### Q38. Custom exceptions?
+Create custom exceptions by inheriting from `Exception` (or a more specific built-in exception). Custom exceptions provide **meaningful error context** specific to your application or test framework. They make error handling more precise and debugging easier.
+
+**SDET pattern:** Create a base exception for your framework (e.g., `TestFrameworkError`), then specific exceptions like `ElementNotFoundError`, `APITimeoutError`, `TestDataError` that inherit from it.
+
 ```python
 class TestExecutionError(Exception):
     def __init__(self, test_name, message="Test failed"):
@@ -381,6 +431,12 @@ except TestExecutionError as e:
 ```
 
 ### Q39. `raise` vs `raise from`?
+- **`raise ExceptionType(msg)`** — raises a new exception. If inside an `except` block, Python automatically chains it with the original exception as `__context__`.
+- **`raise NewException() from original`** — explicitly sets the cause (`__cause__`), showing "The above exception was the direct cause of the following exception."
+- **`raise NewException() from None`** — suppresses the exception chain entirely, hiding the original error.
+
+**When to use `from`:** When you want to clearly indicate that one error directly caused another, providing a clean traceback for debugging.
+
 ```python
 try:
     int("abc")
@@ -400,6 +456,10 @@ except ValueError:
 ## B5. File Handling
 
 ### Q40. File operations?
+Python uses the built-in `open()` function with **mode flags**: `r` (read), `w` (write/overwrite), `a` (append), `rb`/`wb` (binary). Always use the `with` statement (context manager) — it **automatically closes** the file even if an exception occurs.
+
+**SDET use cases:** Reading test data from files, writing test reports, parsing log files for error analysis, generating CSV/JSON test results.
+
 ```python
 # Write
 with open("report.txt", "w") as f:
@@ -417,6 +477,16 @@ with open("report.txt", "a") as f:
 ```
 
 ### Q41. JSON and CSV handling?
+**JSON** (JavaScript Object Notation) is the standard format for API request/response bodies. **CSV** (Comma-Separated Values) is used for tabular test data and data-driven testing.
+
+**Key JSON functions:**
+- `json.dump(obj, file)` — write Python dict to JSON file
+- `json.load(file)` — read JSON file to Python dict
+- `json.dumps(obj)` — convert to JSON string
+- `json.loads(string)` — parse JSON string to dict
+
+**SDET use:** JSON for API test payloads and config files. CSV for parametrized test data (login credentials, search queries, etc.).
+
 ```python
 import json, csv
 
@@ -446,7 +516,13 @@ with open("results.csv", "r") as f:
 ## B6. Context Managers
 
 ### Q42. What are context managers?
-Manage resource setup/teardown (acquire/release).
+A context manager is an object that manages **resource setup and teardown** automatically using the `with` statement. It ensures resources (files, DB connections, browser sessions) are properly **acquired** on entry and **released** on exit, even if exceptions occur.
+
+**Two ways to create:**
+1. **Class-based** — implement `__enter__()` (setup, returns resource) and `__exit__()` (teardown, handles exceptions)
+2. **Function-based** — use `@contextmanager` decorator from `contextlib` with a `yield` statement
+
+**SDET use cases:** Managing browser sessions, database connections, temporary test data, API authentication tokens, and timing test execution.
 
 ```python
 # Class-based
@@ -484,6 +560,15 @@ with timer("API Test"):
 ## B7. Regular Expressions
 
 ### Q43. Regex basics in Python?
+**Regular expressions (regex)** are patterns used to match, search, and manipulate strings. Python's `re` module provides regex support. Key for SDETs when **validating data formats**, **parsing logs**, **extracting test data**, and **API response validation**.
+
+**Key functions:**
+- `re.search(pattern, string)` — finds **first match** anywhere in string
+- `re.match(pattern, string)` — matches only at the **beginning** of string
+- `re.findall(pattern, string)` — returns **all matches** as a list
+- `re.sub(pattern, replacement, string)` — **replaces** all matches
+- `re.compile(pattern)` — pre-compiles for **reuse** (performance optimization)
+
 ```python
 import re
 
@@ -539,6 +624,16 @@ log_pat = r'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}'
 ## B8. Multithreading Basics
 
 ### Q44. Threading in Python?
+**Threading** allows concurrent execution of multiple tasks. Python's `threading` module creates threads that share the same memory space. Due to the **GIL (Global Interpreter Lock)**, threads don't achieve true parallelism for CPU-bound tasks but are excellent for **I/O-bound** operations (file reading, network requests, database queries).
+
+**Key concepts:**
+- `Thread(target=func, args=())` — creates a thread
+- `thread.start()` — begins execution
+- `thread.join()` — waits for thread to finish
+- `Lock()` — prevents race conditions when multiple threads access shared data
+
+**SDET use cases:** Parallel API calls, concurrent file downloads, running browser tests alongside API checks.
+
 ```python
 import threading
 import time
@@ -580,6 +675,15 @@ print(counter)  # 200000 (correct with lock)
 ```
 
 ### Q45. concurrent.futures?
+The `concurrent.futures` module provides a **high-level interface** for asynchronous execution using thread or process pools. It's simpler than raw `threading`/`multiprocessing`.
+
+- **`ThreadPoolExecutor`** — pool of threads for **I/O-bound** tasks (API calls, file I/O)
+- **`ProcessPoolExecutor`** — pool of processes for **CPU-bound** tasks (data processing, heavy computation)
+- **`as_completed(futures)`** — yields futures as they finish (not in submission order)
+- **`executor.map(func, iterable)`** — parallel map (results in submission order)
+
+**SDET use:** Running multiple API tests concurrently, parallel data validation, bulk file processing.
+
 ```python
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
 
