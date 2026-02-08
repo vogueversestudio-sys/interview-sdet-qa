@@ -14,6 +14,9 @@
 ## E1. STRING PROBLEMS
 
 ### CP1. Find duplicate characters in a string
+**Approach:** Use `Counter` from `collections` to count character frequencies, then filter characters with count > 1.
+**Time:** O(n) | **Space:** O(n)
+
 ```python
 def find_duplicates(s):
     from collections import Counter
@@ -23,6 +26,9 @@ print(find_duplicates("automation"))  # {'a': 2, 't': 2, 'o': 2}
 ```
 
 ### CP2. Check if two strings are anagrams
+**Anagram** = two strings containing the exact same characters with the same frequency (e.g., "listen" / "silent"). **Approach:** Compare character frequency counts. Alternative: sort both strings and compare.
+**Time:** O(n) with Counter, O(n log n) with sorting | **Space:** O(n)
+
 ```python
 def is_anagram(s1, s2):
     from collections import Counter
@@ -33,6 +39,9 @@ print(is_anagram("hello", "world"))    # False
 ```
 
 ### CP3. First non-repeating character
+**Approach:** Count frequencies first, then iterate the string again to find the first character with count == 1. Must iterate in original order (not the Counter) to preserve position.
+**Time:** O(n) | **Space:** O(n)
+
 ```python
 def first_non_repeating(s):
     from collections import Counter
@@ -55,6 +64,11 @@ print(reverse_words("Hello World Python"))  # "Python World Hello"
 ```
 
 ### CP5. Longest substring without repeating characters
+**Approach:** **Sliding window** technique — maintain a window `[start, end]` with no duplicates. When a duplicate is found, move `start` to just after the previous occurrence. Track maximum window size.
+**Time:** O(n) — single pass | **Space:** O(min(n, alphabet_size))
+
+**This is a very common interview problem (LeetCode #3).**
+
 ```python
 def longest_unique_substring(s):
     char_index = {}
@@ -77,6 +91,9 @@ print(longest_unique_substring("pwwkew"))      # "wke"
 ```
 
 ### CP6. String compression (Run-Length Encoding)
+**RLE** compresses consecutive repeated characters into `char + count`. Only return compressed version if it's actually shorter than the original.
+**Time:** O(n) | **Space:** O(n)
+
 ```python
 def compress(s):
     if not s:
@@ -169,6 +186,9 @@ print(longest_common_prefix(["flower", "flow", "flight"]))  # "fl"
 ```
 
 ### CP12. String permutations
+**Approach:** Recursion — for each character, fix it at the front and recursively permute the remaining characters. Total permutations = n! (factorial).
+**Time:** O(n! × n) | **Space:** O(n!) for storing all permutations
+
 ```python
 def permutations(s):
     if len(s) <= 1:
@@ -189,6 +209,11 @@ print(permutations("abc"))
 ## E2. LIST / ARRAY PROBLEMS
 
 ### CP13. Two Sum — find two numbers adding to target
+**Approach:** Use a **hash map** to store `{number: index}`. For each number, check if `target - number` exists in the map. One-pass solution.
+**Time:** O(n) | **Space:** O(n)
+
+**This is the #1 most asked coding problem in interviews (LeetCode #1).**
+
 ```python
 def two_sum(nums, target):
     seen = {}
@@ -216,6 +241,9 @@ print(remove_duplicates([1, 3, 2, 3, 1, 4, 2]))  # [1, 3, 2, 4]
 ```
 
 ### CP15. Flatten nested list
+**Approach:** **Recursion** — iterate through items; if an item is a list, recursively flatten it. Generator version with `yield from` is more memory-efficient for large nested structures.
+**Time:** O(n) where n is total elements | **Space:** O(d) where d is max nesting depth (recursion stack)
+
 ```python
 def flatten(lst):
     result = []
@@ -238,6 +266,11 @@ print(flatten([1, [2, [3, 4], 5], [6, 7]]))  # [1, 2, 3, 4, 5, 6, 7]
 ```
 
 ### CP16. Find missing number in 1 to N
+**Two approaches:**
+1. **Math formula** — expected sum `n*(n+1)/2` minus actual sum gives the missing number
+2. **XOR approach** — XOR all numbers 1 to N with all array elements; duplicates cancel out, leaving the missing number. No integer overflow risk.
+**Time:** O(n) | **Space:** O(1)
+
 ```python
 def find_missing(arr, n):
     expected = n * (n + 1) // 2
@@ -343,6 +376,11 @@ print(intersection_with_dups([1,2,2,1], [2,2]))   # [2, 2]
 ```
 
 ### CP23. Maximum subarray sum (Kadane's Algorithm)
+**Kadane's Algorithm** finds the contiguous subarray with the largest sum in O(n) time. **Key idea:** At each position, decide whether to extend the current subarray or start a new one.
+**Time:** O(n) | **Space:** O(1)
+
+**Very frequently asked in SDET interviews — know this algorithm by heart.**
+
 ```python
 def max_subarray_sum(arr):
     max_sum = current = arr[0]
@@ -374,6 +412,9 @@ print(find_leaders([16, 17, 4, 3, 5, 2]))  # [17, 5, 2]
 ## E3. DICTIONARY PROBLEMS
 
 ### CP25. Group anagrams
+**Approach:** Sort each word's characters to create a canonical key. Words with the same sorted key are anagrams. Use `defaultdict(list)` to group them.
+**Time:** O(n × k log k) where k is max word length | **Space:** O(n × k)
+
 ```python
 def group_anagrams(words):
     from collections import defaultdict
@@ -457,6 +498,11 @@ sorted_d = dict(sorted(d.items(), key=lambda x: x[1], reverse=True))
 ## E4. SORTING & SEARCHING
 
 ### CP31. Binary search
+**Binary search** works on **sorted arrays** by repeatedly halving the search space. Compare the target with the middle element; eliminate the half where the target cannot exist.
+**Time:** O(log n) — logarithmic | **Space:** O(1) iterative, O(log n) recursive
+
+**Prerequisite:** Array must be sorted. This is fundamental for many advanced problems.
+
 ```python
 def binary_search(arr, target):
     left, right = 0, len(arr) - 1
@@ -474,6 +520,16 @@ print(binary_search([1, 3, 5, 7, 9, 11], 7))  # 3
 ```
 
 ### CP32. Sorting algorithms
+| Algorithm | Time (Best) | Time (Avg) | Time (Worst) | Space | Stable |
+|-----------|------------|------------|-------------|-------|--------|
+| **Quick Sort** | O(n log n) | O(n log n) | O(n²) | O(log n) | No |
+| **Merge Sort** | O(n log n) | O(n log n) | O(n log n) | O(n) | Yes |
+| **Bubble Sort** | O(n) | O(n²) | O(n²) | O(1) | Yes |
+| **Selection Sort** | O(n²) | O(n²) | O(n²) | O(1) | No |
+| **Insertion Sort** | O(n) | O(n²) | O(n²) | O(1) | Yes |
+
+**Interview tip:** Python's built-in `sorted()` uses **Timsort** (hybrid merge+insertion sort) — O(n log n) guaranteed. Know when to use which algorithm.
+
 ```python
 # Quick Sort
 def quick_sort(arr):
@@ -570,6 +626,12 @@ print(search_rotated([4,5,6,7,0,1,2], 0))  # 4
 ## E5. RECURSION & DYNAMIC PROGRAMMING
 
 ### CP34. Fibonacci (multiple approaches)
+**Fibonacci** is the classic recursion/DP problem. Know all four approaches:
+1. **Naive recursion** — O(2^n) time, exponential (terrible for large n)
+2. **Memoization** (`@lru_cache`) — O(n) time, O(n) space (top-down DP)
+3. **Iterative** — O(n) time, O(1) space (best for interviews)
+4. **Generator** — lazy evaluation, memory-efficient for streaming
+
 ```python
 # Recursive O(2^n)
 def fib(n):
@@ -629,6 +691,10 @@ print(power(2, -2))  # 0.25
 ```
 
 ### CP37. Longest Common Subsequence (LCS)
+**LCS** finds the longest sequence common to two strings (not necessarily contiguous). Classic **dynamic programming** problem with a 2D table.
+**Approach:** Build a DP table where `dp[i][j]` = LCS length of `s1[:i]` and `s2[:j]`. If characters match, `dp[i][j] = dp[i-1][j-1] + 1`. Otherwise, `dp[i][j] = max(dp[i-1][j], dp[i][j-1])`.
+**Time:** O(m × n) | **Space:** O(m × n)
+
 ```python
 def lcs(s1, s2):
     m, n = len(s1), len(s2)
@@ -658,6 +724,9 @@ print(lcs("ABCBDAB", "BDCAB"))  # "BCAB"
 ```
 
 ### CP38. Coin change (minimum coins)
+**Classic DP problem:** Find the minimum number of coins that make up a given amount. Build a DP array where `dp[i]` = minimum coins needed for amount `i`.
+**Time:** O(amount × coins) | **Space:** O(amount)
+
 ```python
 def coin_change(coins, amount):
     dp = [float('inf')] * (amount + 1)
@@ -751,6 +820,12 @@ print(transpose([[1,2,3],[4,5,6]]))
 ## E7. LINKED LIST
 
 ### CP44. Singly linked list with common operations
+Linked list operations are frequently asked in interviews. Key algorithms:
+- **Reverse** — three-pointer technique (`prev`, `curr`, `next`)
+- **Find middle** — slow/fast pointer (Floyd's tortoise and hare)
+- **Detect cycle** — slow/fast pointer; if they meet, there's a cycle
+- **Remove nth from end** — two pointers with n-gap
+
 ```python
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -820,6 +895,11 @@ class LinkedList:
 ## E8. STACK & QUEUE
 
 ### CP45. Balanced parentheses
+**Approach:** Use a **stack**. Push opening brackets, pop on closing brackets and verify match. If stack is empty at the end, parentheses are balanced.
+**Time:** O(n) | **Space:** O(n)
+
+**One of the most common stack problems in interviews.**
+
 ```python
 def is_balanced(s):
     stack = []
@@ -838,6 +918,9 @@ print(is_balanced("({[}])"))  # False
 ```
 
 ### CP46. Min Stack (O(1) getMin)
+**Approach:** Maintain two stacks — one for values and one for tracking minimums. Push to min_stack only when the new value ≤ current minimum. This gives O(1) for `push`, `pop`, and `getMin`.
+**Time:** O(1) for all operations | **Space:** O(n)
+
 ```python
 class MinStack:
     def __init__(self):
@@ -900,6 +983,14 @@ class QueueUsingStacks:
 ## E9. TREE PROBLEMS
 
 ### CP49. BST implementation with traversals
+**Binary Search Tree (BST):** Left child < parent < right child. Four traversal types:
+- **Inorder** (Left → Root → Right) — gives **sorted order**
+- **Preorder** (Root → Left → Right) — used to copy/serialize a tree
+- **Postorder** (Left → Right → Root) — used to delete a tree
+- **Level order** (BFS) — uses a queue, processes level by level
+
+**Time:** O(n) for all traversals | **Space:** O(h) where h is tree height
+
 ```python
 class TreeNode:
     def __init__(self, val):
