@@ -151,6 +151,13 @@ REST Assured is an **open-source Java library** used for testing and **validatin
 
 ## Q7. REST Assured BDD Syntax?
 
+REST Assured follows the **BDD (Given-When-Then)** pattern:
+- **Given** — setup preconditions (base URI, headers, auth, query params, body)
+- **When** — perform the action (HTTP method + endpoint)
+- **Then** — validate the response (status code, body, headers, time)
+
+This makes API tests **readable like English** and easy for non-technical stakeholders to understand.
+
 ```java
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
@@ -176,6 +183,8 @@ given()       // PRECONDITION: setup request
 ---
 
 ## Q8. GET, POST, PUT, PATCH, DELETE examples?
+
+These are the **CRUD operations** mapped to HTTP methods. Every SDET must be able to write tests for all five methods. Key validations: status code, response body fields, response time, and headers.
 
 ```java
 // GET Request
@@ -268,6 +277,16 @@ public void testDeleteUser() {
 ---
 
 ## Q9. How to validate response?
+
+**8 types of response validations** every SDET should know:
+1. **Status code** — `assertEquals(200)`
+2. **Status line** — full HTTP status text
+3. **Response body** — extract values using JsonPath
+4. **Headers** — Content-Type, custom headers
+5. **Response time** — SLA compliance
+6. **Cookies** — session management
+7. **JSON Schema** — structural validation (ensures response contract)
+8. **Hamcrest matchers** — powerful chained assertions (`hasItems`, `everyItem`, `greaterThan`)
 
 ```java
 Response response = given().baseUri("https://reqres.in").get("/api/users/2");
@@ -449,6 +468,11 @@ given()
 
 ## Q13. Cookies in REST Assured?
 
+**Cookies** maintain session state between requests. In API testing, you often need to:
+1. **Extract** cookies from a login response
+2. **Send** cookies in subsequent authenticated requests
+3. **Use `SessionFilter`** for automatic cookie management across a test flow
+
 ```java
 // SEND cookies with request
 given()
@@ -509,7 +533,9 @@ given().filter(session)
 
 ## Q15. Logging in API testing?
 
-REST Assured has **built-in logging** — you don't need Log4j for basic API logging.
+REST Assured has **built-in logging** — you don't need Log4j for basic API logging. Logging is essential for **debugging failed tests** and **audit trails** in CI/CD.
+
+**Best practice:** Use `log().ifValidationFails()` in production tests (logs only on failure) and `log().all()` during development for full visibility.
 
 ```java
 // Log request details
@@ -545,6 +571,10 @@ RequestSpecification spec = new RequestSpecBuilder()
 ---
 
 ## Q16. JSON Schema Validation?
+
+**JSON Schema validation** ensures the API response **structure** (not just values) matches the expected contract. This catches issues like missing fields, wrong data types, or unexpected nulls that field-level assertions might miss.
+
+**Why it matters:** If a backend developer adds/removes/renames a field, schema validation catches it immediately — critical for **contract testing** between frontend and backend teams.
 
 ```java
 // Add dependency in pom.xml:
@@ -587,6 +617,10 @@ public void testJsonSchema() {
 ---
 
 ## Q17. JsonPath in REST Assured?
+
+**JsonPath** extracts values from JSON responses using dot notation and array indexing. REST Assured also supports **GPath expressions** (Groovy-like) for advanced queries like `find`, `findAll`, `max`, `min`, and `size()`.
+
+**Common patterns:** `data[0].email` (first element), `data.first_name` (list of all names), `data.find { it.id == 7 }` (filter by condition).
 
 ```java
 Response response = given().get("https://reqres.in/api/users?page=2");
