@@ -103,7 +103,15 @@ with ThreadPoolExecutor(max_workers=5) as executor:
 | Overhead | Low | High | Very low |
 
 ### Q50. What are coroutines?
-Functions defined with `async def`, paused/resumed with `await`.
+**Coroutines** are special functions defined with `async def` that can be **paused** and **resumed** using `await`. Unlike threads (preemptive multitasking), coroutines use **cooperative multitasking** — they voluntarily yield control at `await` points, allowing other coroutines to run.
+
+**Key concepts:**
+- `async def` — declares a coroutine function
+- `await` — pauses execution until the awaited task completes
+- `asyncio.gather()` — runs multiple coroutines **concurrently** (not in parallel)
+- `asyncio.run()` — entry point to start the event loop
+
+**SDET use:** Running multiple API health checks concurrently, parallel page load verification, bulk data validation.
 
 ```python
 import asyncio
@@ -127,6 +135,8 @@ asyncio.run(main())
 ```
 
 ### Q51. Async API testing example?
+Using `aiohttp` (async HTTP client) with `asyncio` to make **concurrent API calls**. This is significantly faster than sequential `requests` calls when testing multiple endpoints. For 100 API calls, async can complete in the time of 1 call vs 100x time with synchronous code.
+
 ```python
 import asyncio
 import aiohttp
@@ -150,7 +160,9 @@ asyncio.run(main())
 ## C4. Descriptors & Slots
 
 ### Q52. What are descriptors?
-Objects defining `__get__`, `__set__`, or `__delete__` to customize attribute access.
+**Descriptors** are objects that define any of `__get__()`, `__set__()`, or `__delete__()` methods to **customize attribute access** on another class. When a descriptor is assigned as a class variable, Python calls its descriptor methods instead of normal attribute access. They are the mechanism behind `@property`, `@classmethod`, `@staticmethod`, and `__slots__`.
+
+**SDET use:** Creating reusable validators for test configuration (e.g., ensuring timeout values are within range, URLs are valid format).
 
 ```python
 class Validator:
@@ -185,7 +197,9 @@ config.timeout = 500  # ValueError!
 - **Priority:** Data descriptor > Instance `__dict__` > Non-data descriptor
 
 ### Q53. What are `__slots__`?
-Restricts instance attributes, saves memory by avoiding `__dict__`.
+`__slots__` is a class variable that **explicitly declares** which instance attributes are allowed. By defining `__slots__`, Python skips creating a `__dict__` for each instance, resulting in **significant memory savings** (up to 40%) and slightly **faster attribute access**. However, you lose the ability to dynamically add new attributes.
+
+**When to use:** Classes with many instances (e.g., test data objects, page element wrappers), performance-critical code, and when you want to prevent accidental attribute creation.
 
 ```python
 class WithSlots:
@@ -204,6 +218,10 @@ b.z = 3  # AttributeError!
 ## C5. Design Patterns for SDET
 
 ### Q54. Singleton Pattern
+The **Singleton pattern** ensures a class has **only one instance** throughout the application's lifecycle. It provides a global access point to that instance. Implemented by overriding `__new__()` to check if an instance already exists.
+
+**SDET use:** Managing a single WebDriver instance, database connection pool, configuration manager, or logger across all test classes.
+
 ```python
 class WebDriverManager:
     _instance = None
@@ -221,6 +239,10 @@ class WebDriverManager:
 ```
 
 ### Q55. Factory Pattern
+The **Factory pattern** creates objects without exposing the creation logic to the client. It delegates instantiation to a factory method that returns the appropriate object based on input parameters.
+
+**SDET use:** Creating browser drivers (Chrome/Firefox/Safari) based on config, generating different types of test data, creating API clients for different environments.
+
 ```python
 class BrowserFactory:
     @staticmethod
@@ -237,6 +259,12 @@ class BrowserFactory:
 ```
 
 ### Q56. Page Object Model (POM)
+**POM** is the most important design pattern in test automation. Each web page is represented by a **separate class** that contains the page's **locators** (as class variables) and **interaction methods**. Benefits:
+- **Single point of maintenance** — if a locator changes, update only one place
+- **Readable tests** — `loginPage.login("admin", "pass")` instead of raw Selenium commands
+- **Reusability** — page methods can be reused across multiple test cases
+- **Separation of concerns** — tests focus on "what to test", page objects handle "how to interact"
+
 ```python
 class BasePage:
     def __init__(self, driver):
@@ -263,6 +291,10 @@ class LoginPage(BasePage):
 ```
 
 ### Q57. Strategy Pattern
+The **Strategy pattern** defines a family of algorithms (strategies), encapsulates each one, and makes them **interchangeable**. The client can switch between strategies at runtime without changing the code that uses them.
+
+**SDET use:** Different wait strategies (explicit/fluent/custom), different locator strategies (CSS/XPath/ID), different reporting strategies (Allure/Extent/HTML), or different data sources (CSV/JSON/DB) for data-driven tests.
+
 ```python
 from abc import ABC, abstractmethod
 
@@ -286,6 +318,10 @@ class ElementFinder:
 ```
 
 ### Q58. Builder Pattern (for test data)
+The **Builder pattern** constructs complex objects **step by step** using method chaining. Instead of a constructor with many parameters, you call readable builder methods. The `build()` method returns the final object.
+
+**SDET use:** Creating test data with many optional fields (user profiles, API payloads, test configurations). Makes test data creation readable and avoids telescoping constructors.
+
 ```python
 class UserBuilder:
     def __init__(self):
@@ -328,6 +364,16 @@ inactive = UserBuilder().with_name("Old User").inactive().build()
 ## C6. Dataclasses & Typing
 
 ### Q59. Dataclasses?
+**Dataclasses** (Python 3.7+) automatically generate `__init__`, `__repr__`, `__eq__`, and other boilerplate methods based on class annotations. They're ideal for **data containers** — objects that primarily hold data with minimal behavior.
+
+**Key features:**
+- `@dataclass` — auto-generates `__init__`, `__repr__`, `__eq__`
+- `field(default_factory=list)` — mutable default values
+- `@dataclass(frozen=True)` — creates immutable instances (hashable, usable as dict keys)
+- `asdict(obj)` — converts to dictionary (useful for JSON serialization)
+
+**SDET use:** Test results, test configurations, API response models, test data objects.
+
 ```python
 from dataclasses import dataclass, field, asdict
 from typing import List, Optional
@@ -356,6 +402,12 @@ class Config:
 ```
 
 ### Q60. Type hinting?
+**Type hints** (PEP 484, Python 3.5+) add optional type annotations to function parameters, return values, and variables. They don't enforce types at runtime but enable **IDE autocompletion**, **static analysis** (mypy), and serve as **living documentation**.
+
+**Key types:** `List[str]`, `Dict[str, Any]`, `Optional[int]` (can be None), `Union[str, int]`, `Callable[[args], return]`, `Tuple[int, str]`, `TypeVar` (generics), `Protocol` (structural typing).
+
+**SDET benefit:** Catch type errors before running tests, better code readability, easier framework maintenance.
+
 ```python
 from typing import List, Dict, Optional, Union, Callable, Any, TypeVar, Protocol
 
@@ -390,6 +442,13 @@ def interact(element: Clickable) -> None:
 ## C7. Advanced Concepts
 
 ### Q61. `__getattr__` vs `__getattribute__` vs `__setattr__`?
+These magic methods control **attribute access** on objects:
+- **`__getattribute__(self, name)`** — called on **every** attribute access. Use with caution (easy to cause infinite recursion). Always call `super().__getattribute__()` inside.
+- **`__getattr__(self, name)`** — called **only when** the attribute is **not found** through normal mechanisms. Good for default values or proxying.
+- **`__setattr__(self, name, value)`** — called on **every** attribute assignment. Use `super().__setattr__()` to actually set the value.
+
+**SDET use:** Logging attribute access for debugging, creating proxy objects for API clients, implementing lazy-loading page elements.
+
 ```python
 class LoggingObject:
     def __getattribute__(self, name):
@@ -408,7 +467,10 @@ class LoggingObject:
 ```
 
 ### Q62. Monkey patching?
-Dynamically modifying a class/module at runtime.
+**Monkey patching** is dynamically modifying a class, module, or object **at runtime** by replacing its attributes or methods. While generally considered bad practice in production code, it's extremely useful for **testing** — replacing real implementations with mocks or stubs without modifying source code.
+
+**SDET use:** Mocking API calls, replacing database connections with test doubles, simulating error conditions. Python's `unittest.mock.patch` is the preferred way (structured monkey patching with automatic cleanup).
+
 ```python
 class APIClient:
     def get(self, url):
@@ -425,6 +487,15 @@ print(client.get("https://api.example.com"))  # mocked
 ```
 
 ### Q63. `collections` module?
+The `collections` module provides **specialized container datatypes** that extend Python's built-in containers (dict, list, tuple, set):
+
+- **`defaultdict(type)`** — dict that auto-creates missing keys with a default value
+- **`Counter(iterable)`** — counts occurrences, has `most_common(n)` method
+- **`namedtuple(name, fields)`** — lightweight immutable object with named fields
+- **`deque`** — double-ended queue with O(1) append/pop on both ends
+- **`ChainMap`** — combines multiple dicts into a single view (first match wins)
+- **`OrderedDict`** — dict that remembers insertion order (redundant since Python 3.7+)
+
 ```python
 from collections import defaultdict, Counter, namedtuple, deque, ChainMap, OrderedDict
 
@@ -456,6 +527,16 @@ print(config["retries"])  # 3
 ```
 
 ### Q64. `itertools` module?
+The `itertools` module provides **memory-efficient iterator building blocks** for working with sequences. All functions return **lazy iterators**, making them perfect for large datasets.
+
+**Key functions for SDET:**
+- `chain()` — combine multiple iterables into one
+- `product()` — cartesian product (generate all browser + environment combinations)
+- `combinations()` / `permutations()` — test input combinations
+- `groupby()` — group test results by status/category
+- `islice()` — slice an iterator without loading all data
+- `accumulate()` — running totals (useful for performance trend analysis)
+
 ```python
 import itertools
 
@@ -483,6 +564,16 @@ list(itertools.accumulate([1,2,3,4]))  # [1,3,6,10]
 ```
 
 ### Q65. `functools` module?
+The `functools` module provides **higher-order functions** that act on or return other functions:
+
+- **`lru_cache(maxsize)`** — memoization decorator that caches function results (Least Recently Used eviction)
+- **`partial(func, *args)`** — creates a new function with some arguments pre-filled (currying)
+- **`reduce(func, iterable)`** — cumulatively applies function to pairs
+- **`wraps(func)`** — preserves metadata when creating decorators
+- **`total_ordering`** — auto-generates comparison methods from `__eq__` + one other
+
+**SDET use:** `lru_cache` for expensive API lookups, `partial` for creating pre-configured HTTP clients, `wraps` in custom test decorators.
+
 ```python
 from functools import lru_cache, partial, reduce, wraps, total_ordering
 
@@ -511,6 +602,10 @@ class Priority:
 ```
 
 ### Q66. Weak references?
+A **weak reference** allows you to refer to an object **without preventing garbage collection**. Normal references increase the reference count; weak references don't. When the object is garbage collected, the weak reference returns `None`.
+
+**Use cases:** Caching expensive objects (they get cleaned up when memory is needed), observer patterns (observers don't keep subjects alive), and preventing circular references in parent-child relationships.
+
 ```python
 import weakref
 
@@ -529,6 +624,12 @@ print(weak())       # None — object garbage collected
 ```
 
 ### Q67. Abstract Base Classes (ABC)?
+**ABCs** define a **blueprint/contract** for subclasses. Methods decorated with `@abstractmethod` **must be implemented** by any concrete subclass — attempting to instantiate a class with unimplemented abstract methods raises `TypeError`.
+
+**SDET use:** Defining a base test runner contract (setup/run/teardown), base page object interface, base API client with required methods. Ensures all implementations follow a consistent interface.
+
+**Template Method Pattern:** The ABC defines the algorithm skeleton (`execute`), while subclasses fill in the specific steps — one of the most common patterns in test frameworks.
+
 ```python
 from abc import ABC, abstractmethod
 
@@ -565,6 +666,17 @@ class SeleniumTestRunner(TestRunner):
 ```
 
 ### Q68. Enums?
+**Enums** (Enumerations) represent a fixed set of **named constants**. They prevent magic strings/numbers in code, provide type safety, and make code self-documenting. Use `Enum` for string/custom values, `IntEnum` for integer values that support comparison.
+
+**Key features:**
+- `.value` — the assigned value ("pass", 1, etc.)
+- `.name` — the constant name ("PASS", "HIGH")
+- Iterable — loop through all members
+- Comparable — `IntEnum` supports `<`, `>`, `==`
+- `auto()` — auto-assign incrementing integer values
+
+**SDET use:** Test statuses, priority levels, browser types, environment names — anything with a fixed set of valid values.
+
 ```python
 from enum import Enum, auto, IntEnum
 
