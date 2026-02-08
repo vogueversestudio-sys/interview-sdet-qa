@@ -146,6 +146,10 @@ public interface Loggable {
 
 ## Q4. Abstract class vs Abstract method?
 
+An **abstract class** cannot be instantiated directly — it serves as a blueprint for subclasses. It can have both abstract methods (no body, subclass MUST implement) and concrete methods (with body, inherited as-is).
+
+**When to use:** When you want to provide **partial implementation** that subclasses share, but force them to implement specific behavior. In Selenium: `BaseTest` is abstract with `setupTestData()` as abstract and `openBrowser()` as concrete.
+
 ```java
 // Abstract class — cannot be instantiated
 abstract class BaseTest {
@@ -197,6 +201,11 @@ class LoginTest extends BaseTest {
 ---
 
 ## Q6. Exceptions in Java?
+
+**Exception hierarchy** is one of the most asked Java topics. Key distinction:
+- **Checked exceptions** (compile-time) — compiler forces you to handle them with `try-catch` or `throws`
+- **Unchecked exceptions** (runtime) — occur during execution, not checked by compiler
+- **Errors** — serious JVM problems (OutOfMemory, StackOverflow) — never catch these
 
 ```
 Throwable
@@ -318,6 +327,8 @@ final class Constants {            // final class — cannot extend
 
 ## Q9. Constructor?
 
+A **constructor** initializes an object when it's created with `new`. It has the same name as the class and no return type. **Constructor chaining** uses `this()` to call another constructor in the same class or `super()` to call parent's constructor.
+
 ```java
 class User {
     String name;
@@ -403,6 +414,10 @@ DriverManager dm2 = DriverManager.getInstance();
 
 ## Q11. Collections Framework?
 
+The **Collections Framework** provides data structures and algorithms for storing and manipulating groups of objects. This is one of the **most heavily tested Java topics** in SDET interviews.
+
+**Key interfaces:** `List` (ordered, duplicates allowed), `Set` (no duplicates), `Queue` (FIFO), `Map` (key-value pairs, NOT part of Collection interface).
+
 ```
 Collection (Interface)
 ├── List (Interface) — ordered, allows duplicates
@@ -483,6 +498,12 @@ String url = props.getProperty("base.url");
 
 ## Q12. Java 8 Features?
 
+Java 8 introduced **functional programming** capabilities. The four most important features for SDET interviews:
+1. **Lambda expressions** — concise anonymous functions, replace anonymous inner classes
+2. **Stream API** — functional-style operations (filter, map, reduce) on collections
+3. **Optional** — wrapper to avoid `NullPointerException`
+4. **Date/Time API** (`java.time`) — immutable, thread-safe date handling
+
 ```java
 // 1. LAMBDA EXPRESSIONS — concise anonymous functions
 // Old way
@@ -528,6 +549,10 @@ String formatted = now.format(formatter);
 ---
 
 ## Q13. String Immutability?
+
+**Strings in Java are immutable** — once created, their value cannot be changed. Any modification creates a **new String object**. Strings are stored in a special **String Pool** for memory optimization — identical string literals share the same pool reference.
+
+**`==` vs `equals()`:** `==` compares references (memory address), `equals()` compares content. For strings from the pool, `==` works; for `new String()`, only `equals()` is reliable.
 
 ```java
 String s1 = "Hello";
@@ -616,8 +641,9 @@ Because JVM calls `main()` **before any object is created**. If it weren't stati
 
 ## Q16. Serialization & Deserialization?
 
-**Serialization:** Converting Java object → byte stream (or JSON/XML for APIs)
-**Deserialization:** Converting byte stream (or JSON/XML) → Java object
+**Serialization** converts a Java object into a transferable format (byte stream, JSON, XML). **Deserialization** reverses the process. In SDET context, this is primarily used for **API testing** — converting POJOs to/from JSON request/response bodies.
+
+**Libraries:** Jackson (`ObjectMapper`) and Gson are the most popular. REST Assured auto-serializes POJOs when you pass them to `.body()`.
 
 ```java
 // In API testing context — most commonly used for:
@@ -736,6 +762,8 @@ t2.testName = "Dashboard Test"; // belongs to t2 only
 
 ## Q20. Multithreading basics — Thread vs Runnable? (asked at senior level)
 
+**Multithreading** allows concurrent execution of two or more threads. In SDET context, it's essential for **parallel test execution**. `ThreadLocal<WebDriver>` ensures each thread has its own browser instance — critical for TestNG parallel execution.
+
 | Aspect | extends Thread | implements Runnable |
 |--------|---------------|-------------------|
 | Inheritance | Cannot extend another class | Can extend another class |
@@ -774,6 +802,8 @@ public static void setDriver(WebDriver d) { driver.set(d); }
 ---
 
 ## Q21. HashMap internals — how does HashMap work? (frequently asked)
+
+This is a **deep-dive interview question** testing your understanding of data structures. HashMap uses an **array of buckets** internally, where each bucket is a linked list (or balanced tree for 8+ collisions in Java 8+).
 
 **How it works:**
 1. `hashCode()` is called on the key → gives bucket index
@@ -851,7 +881,9 @@ employeeList.sort(Comparator.comparingInt(e -> e.salary).reversed());
 
 ## Q23. What is Enum in Java?
 
-An **enum** is a special class that represents a fixed set of constants.
+An **enum** is a special class that represents a **fixed set of constants**. Unlike simple constants (`static final`), enums can have **fields, constructors, and methods** — making them type-safe and extensible.
+
+**SDET usage:** Browsers (`CHROME`, `FIREFOX`), environments (`QA`, `STAGING`, `PROD`), test status (`PASS`, `FAIL`, `SKIP`), and API status codes.
 
 ```java
 // Basic enum
