@@ -58,6 +58,15 @@ class TestLogin(unittest.TestCase):
 ```
 
 ### Q70. pytest fixtures in detail?
+**Fixtures** are pytest's way of providing **setup/teardown** and **dependency injection** for tests. They replace traditional `setUp`/`tearDown` with a more flexible, composable system.
+
+**Key concepts:**
+- **Scope:** `function` (default, runs per test), `class`, `module`, `package`, `session` (runs once for all tests)
+- **`yield`:** Code before `yield` is setup; code after is teardown
+- **`autouse=True`:** Applies fixture to all tests automatically without requesting it
+- **Parametrized fixtures:** Run tests with different data/configurations by passing `params` list
+- **Fixture chaining:** Fixtures can depend on other fixtures (dependency injection)
+
 ```python
 import pytest
 
@@ -94,6 +103,16 @@ def test_homepage(browser):
 ```
 
 ### Q71. pytest markers?
+**Markers** are decorators that add metadata to tests for **categorization, conditional execution, and test selection**. They let you tag tests (smoke, regression, api, ui) and run specific subsets using `-m` flag.
+
+**Built-in markers:**
+- `@pytest.mark.skip` — always skip this test
+- `@pytest.mark.skipif(condition)` — skip if condition is true
+- `@pytest.mark.xfail` — expected to fail (known bug)
+- `@pytest.mark.parametrize` — run test with multiple inputs
+
+**Custom markers** must be registered in `pytest.ini` to avoid warnings.
+
 ```python
 import pytest
 
@@ -128,6 +147,12 @@ markers =
 ```
 
 ### Q72. pytest conftest.py?
+`conftest.py` is a **special pytest file** for sharing fixtures, hooks, and plugins across multiple test files. Key features:
+- **No import needed** — fixtures defined in `conftest.py` are automatically available to all tests in the same directory and subdirectories
+- **Multiple levels** — you can have `conftest.py` at project root, per test directory, etc. (nearest scope wins)
+- **Hooks** — customize pytest behavior (collection, reporting, CLI options)
+- **Plugin registration** — register local plugins
+
 ```python
 # conftest.py — shared fixtures, hooks, plugins
 
@@ -165,6 +190,13 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
 ```
 
 ### Q73. Test reports with pytest?
+**Test reporting** is essential for visibility into test results. Popular options:
+- **pytest-html** — generates standalone HTML reports with pass/fail/skip statistics
+- **Allure Report** — rich, interactive reports with steps, attachments, severity levels, and history trends
+- **JUnit XML** — standard format consumed by CI tools (Jenkins, GitHub Actions)
+
+**Allure annotations** add context: `@allure.feature`, `@allure.story`, `@allure.severity`, `@allure.step`, and `allure.attach` for screenshots/logs.
+
 ```python
 # HTML Report
 # pip install pytest-html
@@ -192,6 +224,14 @@ def test_valid_login():
 ```
 
 ### Q74. Parallel test execution?
+**pytest-xdist** enables running tests in parallel across multiple CPUs, significantly reducing execution time. Key distribution modes:
+- `-n auto` — auto-detect CPU count
+- `--dist loadfile` — group tests by file (keeps file-level fixtures together)
+- `--dist loadscope` — group by class/module
+- `--dist no` — disable distribution
+
+**Important:** Parallel tests must be **independent** — no shared state between tests. Use `FileLock` for shared resources like databases.
+
 ```bash
 # pytest-xdist
 pip install pytest-xdist
@@ -223,6 +263,15 @@ def db_setup(tmp_path_factory, worker_id):
 ## D2. API Testing
 
 ### Q75. API testing with requests?
+The `requests` library is Python's most popular HTTP client for API testing. It supports all HTTP methods, JSON handling, authentication, session management, and response validation.
+
+**Key assertions for API tests:**
+- **Status code** — `assert resp.status_code == 200`
+- **Response body** — validate JSON fields and values
+- **Response time** — `assert resp.elapsed.total_seconds() < 2.0`
+- **Headers** — `assert 'application/json' in resp.headers['Content-Type']`
+- **JSON Schema** — validate response structure with `jsonschema` library
+
 ```python
 import requests
 import pytest
@@ -272,6 +321,16 @@ class TestUserAPI:
 ```
 
 ### Q76. requests.Session and authentication?
+`requests.Session()` maintains **cookies, headers, and connection pooling** across multiple requests — essential for testing authenticated workflows.
+
+**Authentication types:**
+- **Basic Auth** — `HTTPBasicAuth(user, pass)` — base64 encoded username:password
+- **Bearer Token** — JWT token in `Authorization` header
+- **API Key** — custom header like `X-API-Key`
+- **Session/Cookie** — login once, session auto-manages cookies
+
+**Retry strategy** with `HTTPAdapter` handles transient failures (500, 502, 503) with exponential backoff.
+
 ```python
 import requests
 from requests.auth import HTTPBasicAuth
@@ -304,6 +363,10 @@ session.mount("https://", adapter)
 ```
 
 ### Q77. API test framework structure?
+A well-structured API test framework follows the **Service Object pattern** (similar to POM for UI). The `BaseAPI` class handles HTTP methods, logging, and session management. Specific API classes (e.g., `UserAPI`) inherit from `BaseAPI` and provide domain-specific methods.
+
+**Benefits:** Single point of change for base URL, headers, and authentication. Clean, readable tests that focus on business logic, not HTTP details.
+
 ```python
 # base_api.py
 import requests
@@ -362,6 +425,15 @@ class UserAPI(BaseAPI):
 ## D3. Mocking & Patching
 
 ### Q78. unittest.mock in detail?
+**Mocking** is essential for isolating the unit under test by replacing real dependencies (APIs, databases, file systems) with controlled fake objects.
+
+**Key classes:**
+- **`Mock()`** — general-purpose mock; auto-creates attributes and methods on access
+- **`MagicMock()`** — Mock + support for magic methods (`__len__`, `__getitem__`, etc.)
+- **`patch(target)`** — temporarily replaces a real object with a mock during the test
+
+**Key features:** `return_value` (fixed return), `side_effect` (sequence of returns or exceptions), and assertion methods (`assert_called_once_with`, `call_count`).
+
 ```python
 from unittest.mock import Mock, MagicMock, patch, call
 
@@ -429,6 +501,10 @@ def test_weather_object():
 | Usage | `m = Mock()` | `m = MagicMock()` | `@patch('module.Class')` |
 
 ### Q80. pytest-mock (mocker fixture)?
+`pytest-mock` provides a `mocker` fixture that wraps `unittest.mock.patch` with **automatic cleanup** — mocks are automatically removed after each test. It also provides `mocker.spy()` to wrap a real function while tracking calls.
+
+**Advantages over raw `unittest.mock`:** No need for decorators or context managers, automatic teardown, cleaner syntax, and integration with pytest's fixture system.
+
 ```python
 # pip install pytest-mock
 
@@ -453,6 +529,14 @@ def test_api_call(mocker):
 ## D4. Selenium with Python
 
 ### Q81. Selenium fundamentals for SDET?
+**Selenium WebDriver** is the industry standard for browser automation. Key concepts every SDET must know:
+
+**8 Locator strategies** (priority order): `ID` > `Name` > `CSS Selector` > `XPath` > `LinkText` > `PartialLinkText` > `ClassName` > `TagName`
+
+**Waits:** Always use **Explicit Wait** (`WebDriverWait`) over implicit or `time.sleep()`. Custom wait conditions can be created with callable classes.
+
+**Actions:** Mouse hover, drag-drop, double-click, right-click via `ActionChains`. JavaScript execution for scrolling, clicking hidden elements, and DOM manipulation.
+
 ```python
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -542,6 +626,13 @@ driver.quit()
 ```
 
 ### Q82. Page Object Model implementation?
+A complete POM implementation has three layers:
+1. **BasePage** — common methods (find, click, type, wait, screenshot) shared by all pages
+2. **Page classes** — each page has locators as class constants and interaction methods
+3. **Test classes** — use page methods to write clean, readable tests
+
+**Key rules:** Locators are class-level tuples `(By.ID, "value")`. Page methods return `self` or the next page object for fluent chaining. Tests never use raw Selenium commands.
+
 ```python
 # base_page.py
 from selenium.webdriver.support.ui import WebDriverWait
@@ -616,6 +707,16 @@ class TestLogin:
 ## D5. BDD with Behave
 
 ### Q83. BDD with Behave?
+**BDD (Behavior-Driven Development)** bridges the gap between business and technical teams using **Gherkin syntax** (Given/When/Then). **Behave** is Python's BDD framework.
+
+**Structure:**
+- **Feature files** (`.feature`) — written in plain English, define scenarios with Gherkin
+- **Step definitions** — Python functions decorated with `@given`, `@when`, `@then` that map Gherkin steps to code
+- **environment.py** — hooks for setup/teardown (before_scenario, after_scenario)
+- **Scenario Outline** — parametrized scenarios using `Examples` table
+
+**SDET benefit:** Non-technical stakeholders can read and validate test scenarios.
+
 ```gherkin
 # features/login.feature
 Feature: User Login
@@ -686,6 +787,13 @@ def after_scenario(context, scenario):
 ## D6. Database Testing
 
 ### Q84. Database testing with Python?
+**Database testing** verifies data integrity, queries, constraints, and stored procedures. Python approaches:
+- **sqlite3** — built-in, great for in-memory test databases (`:memory:`)
+- **SQLAlchemy** — ORM and raw SQL support for MySQL, PostgreSQL, Oracle
+- **pytest fixtures** — create/teardown test databases per test for isolation
+
+**Common DB test scenarios:** CRUD operations, constraint validation (unique, not null, foreign key), data migration verification, query performance, and stored procedure output.
+
 ```python
 import sqlite3
 import pytest
@@ -735,6 +843,10 @@ def test_query():
 ## D7. CI/CD Integration
 
 ### Q85. Framework structure for SDET?
+A production-grade SDET framework follows **separation of concerns** with dedicated folders for configuration, page objects, API clients, tests, utilities, and test data. This structure supports both **UI and API testing** in a single framework.
+
+**Key components:** `config/` (environment configs), `pages/` (POM classes), `api/` (service objects), `tests/` (test cases with conftest), `utils/` (helpers like logger, DB, data generators), `test_data/` (JSON/CSV/Excel data files).
+
 ```
 project/
 ├── config/
@@ -769,6 +881,15 @@ project/
 ```
 
 ### Q86. GitHub Actions CI for tests?
+**CI/CD integration** ensures tests run automatically on every push/PR. GitHub Actions is a popular choice with YAML-based workflow configuration.
+
+**Typical CI pipeline for SDET:**
+1. Checkout code → Install Python → Install dependencies
+2. Run tests with `pytest` (parallel with `-n auto`)
+3. Generate HTML/Allure reports
+4. Upload reports as artifacts (accessible even if tests fail)
+5. Notify on Slack/Teams on failure
+
 ```yaml
 # .github/workflows/ci.yml
 name: Test Suite
@@ -796,6 +917,13 @@ jobs:
 ## D8. Logging in Test Frameworks
 
 ### Q87. Logging setup for test framework?
+**Structured logging** is critical for debugging test failures, especially in CI/CD where you can't interactively debug. A proper logging setup has:
+- **File handler** — DEBUG level, persists all details to log files with timestamps
+- **Console handler** — INFO level, shows only important messages during test runs
+- **Formatter** — consistent format: `timestamp | module | level | message`
+
+**Best practice:** Create one logger per module/class. Use `logger.info()` for test steps, `logger.error()` for failures, `logger.debug()` for detailed data.
+
 ```python
 import logging
 import os
@@ -837,6 +965,13 @@ logger.error("Element not found: //button[@id='submit']")
 ## D9. Performance & Load Testing
 
 ### Q88. Python tools for performance testing?
+**Performance testing** measures response times, throughput, and system behavior under load. Key Python tools:
+- **Locust** — Python-based load testing tool with web UI. Define user behavior as Python code, scale to millions of users.
+- **pytest-benchmark** — micro-benchmarking for unit-level performance
+- **Custom measurement** — `time.perf_counter()` with statistical analysis (min, max, avg, p95, p99)
+
+**Key metrics:** Response time (avg, p95, p99), throughput (requests/sec), error rate, and resource utilization.
+
 ```python
 # Using locust for load testing
 # pip install locust
@@ -891,6 +1026,14 @@ def measure_performance(func, iterations=100):
 ## D10. Docker for Test Environments
 
 ### Q89. Dockerfile for test framework?
+**Docker** provides consistent, reproducible test environments. Benefits for SDET:
+- **Eliminates "works on my machine"** — same environment everywhere
+- **Selenium Grid** — scale browser instances with `docker-compose`
+- **CI/CD integration** — tests run in isolated containers
+- **Parallel execution** — multiple browser nodes for faster execution
+
+**Docker Compose** orchestrates multi-container setups: Selenium Hub + Chrome/Firefox nodes for distributed testing.
+
 ```dockerfile
 FROM python:3.11-slim
 
