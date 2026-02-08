@@ -9,6 +9,8 @@
 ---
 
 ## CP1. Reverse a String
+**Three approaches:** `StringBuilder.reverse()` (simplest), two-pointer swap on char array (no built-in), and recursion. Interviewers often ask you to solve **without built-in methods**.
+**Time:** O(n) | **Space:** O(n)
 
 ```java
 // Method 1: StringBuilder
@@ -42,6 +44,8 @@ System.out.println(reverse("Selenium"));  // muineleS
 ---
 
 ## CP2. Check if String is Palindrome
+**Approach:** Clean the string (lowercase, remove non-alphanumeric), then use two pointers from both ends moving inward. If all characters match, it's a palindrome.
+**Time:** O(n) | **Space:** O(n) for cleaned string
 
 ```java
 public static boolean isPalindrome(String str) {
@@ -63,6 +67,8 @@ System.out.println(isPalindrome("hello"));        // false
 ---
 
 ## CP3. First Non-Repeating Character in a String (Wipro, Accenture — very frequent)
+**Approach:** Use `LinkedHashMap` to count frequencies while preserving insertion order. Then iterate the map to find the first entry with count == 1. Alternative: `indexOf == lastIndexOf` check (simpler but O(n²)).
+**Time:** O(n) with LinkedHashMap | **Space:** O(n)
 
 ```java
 // Method 1: LinkedHashMap (preserves insertion order)
@@ -124,6 +130,8 @@ System.out.println(removeDuplicates("automation"));    // automin
 ---
 
 ## CP5. Count Characters / Find Duplicate Characters in a String
+**Approach:** Use `LinkedHashMap` to count character frequencies. Filter entries with count > 1 for duplicates. `LinkedHashMap` preserves insertion order for consistent output.
+**Time:** O(n) | **Space:** O(n)
 
 ```java
 public static Map<Character, Integer> countChars(String str) {
@@ -187,6 +195,9 @@ System.out.println(reverseWords("Hello World Java"));  // Java World Hello
 ---
 
 ## CP8. Check if Two Strings are Anagrams
+**Two approaches:**
+1. **Sorting** — sort both strings, compare. O(n log n) time.
+2. **Character frequency array** — count characters in first string, subtract for second. If all counts are 0, they're anagrams. O(n) time — **preferred in interviews**.
 
 ```java
 // Method 1: Sorting
@@ -243,6 +254,9 @@ System.out.println(compress("abc"));           // abc (not shorter)
 ---
 
 ## CP10. Find Prime Numbers Between 1-20 (Accenture — Screenshot 1)
+**A prime number** is only divisible by 1 and itself. Optimization: only check divisors up to √n (if no factor found by √n, the number is prime).
+
+**Two approaches:** Basic trial division O(√n per number) for small ranges, and **Sieve of Eratosthenes** O(n log log n) for large ranges — marks all multiples of each prime as composite.
 
 ```java
 // Method 1: Basic
@@ -289,6 +303,7 @@ System.out.println(sieveOfEratosthenes(20));
 ---
 
 ## CP11. Fibonacci Series
+**Three approaches:** Iterative O(n) time O(1) space (best), recursive O(2^n) (terrible — show you know why), and DP with memoization O(n) time O(n) space. Interviewers expect you to know the trade-offs.
 
 ```java
 // Method 1: Iterative
@@ -345,6 +360,8 @@ System.out.println(factorial(10));  // 3628800
 ---
 
 ## CP13. Check Armstrong Number
+An **Armstrong number** (narcissistic number) is a number where the sum of its digits raised to the power of the number of digits equals the number itself. Example: 153 = 1³ + 5³ + 3³.
+**Time:** O(d) where d is number of digits | **Space:** O(1)
 
 ```java
 public static boolean isArmstrong(int n) {
@@ -406,6 +423,7 @@ a = a ^ b;
 ---
 
 ## CP16. FizzBuzz (Classic — still asked in 2026)
+**FizzBuzz** tests basic logic and modulo operations. **Key trick:** Check divisibility by 15 **first** (both 3 and 5), then 3, then 5. Many candidates fail by checking 3 and 5 separately before 15.
 
 ```java
 public static void fizzBuzz(int n) {
@@ -428,6 +446,8 @@ fizzBuzz(15);
 ---
 
 ## CP17. Find Second Largest Element
+**Approach:** Single pass with two variables (`first`, `second`). Update both as you traverse. Handles duplicates correctly by checking `num != first`.
+**Time:** O(n) — single pass | **Space:** O(1)
 
 ```java
 public static int secondLargest(int[] arr) {
@@ -449,6 +469,10 @@ System.out.println(secondLargest(new int[]{10, 5, 20, 8, 20}));  // 10
 ---
 
 ## CP18. Two Sum — Find Two Numbers That Add Up to Target
+**Approach:** HashMap stores `{number: index}`. For each element, check if `target - current` exists in the map. One-pass solution.
+**Time:** O(n) | **Space:** O(n)
+
+**This is the #1 most asked coding problem in interviews (LeetCode #1).**
 
 ```java
 // HashMap approach — O(n) time, O(n) space
@@ -539,6 +563,7 @@ System.out.println(Arrays.toString(arr));  // [1, 3, 12, 0, 0]
 ---
 
 ## CP22. Sort Array Without sort() — Bubble Sort (from Screenshot 3)
+**Know at least 3 sorting algorithms** and their complexities. Bubble Sort is simplest to implement; Insertion Sort is fastest for small/nearly sorted arrays; Quick Sort/Merge Sort for large datasets.
 
 ```java
 // Bubble Sort — O(n²)
@@ -621,6 +646,8 @@ System.out.println(Arrays.toString(mergeSorted(new int[]{1, 3, 5}, new int[]{2, 
 ---
 
 ## CP24. Maximum Subarray Sum (Kadane's Algorithm)
+**Kadane's Algorithm:** At each position, decide whether to extend the current subarray or start fresh. Track the global maximum.
+**Time:** O(n) | **Space:** O(1)
 
 ```java
 public static int maxSubarraySum(int[] arr) {
@@ -638,6 +665,8 @@ System.out.println(maxSubarraySum(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}));  /
 ---
 
 ## CP25. Binary Search
+**Binary search** works on **sorted arrays** by halving the search space each step. Use `mid = left + (right - left) / 2` to avoid integer overflow (not `(left + right) / 2`).
+**Time:** O(log n) | **Space:** O(1) iterative, O(log n) recursive
 
 ```java
 // Iterative
@@ -671,6 +700,7 @@ System.out.println(binarySearch(new int[]{1, 3, 5, 7, 9, 11}, 7));  // 3
 ---
 
 ## CP26. Write Selenium Script to Search Flight from Mumbai to Delhi (Accenture — Screenshot 1)
+**This is a practical Selenium coding question** testing your ability to handle real-world scenarios: popups, dynamic dropdowns (autocomplete), date pickers, and explicit waits. Key patterns: try-catch for optional elements, `WebDriverWait` for dynamic content, and `findElements` for result validation.
 
 ```java
 @Test
@@ -736,6 +766,9 @@ public void searchFlight() {
 ---
 
 ## CP27. Fetch All Links from a Page and Check for Broken Links (from Screenshot 3)
+**Broken link testing** validates that all hyperlinks on a page return valid HTTP responses (status < 400). Uses `HttpURLConnection` with HEAD requests (faster than GET — no body downloaded). Filter out null, empty, and `javascript:` URLs.
+
+**SDET relevance:** This is a common automation task that can be added to any regression suite.
 
 ```java
 @Test
@@ -913,6 +946,8 @@ class Stack {
 ---
 
 ## CP33. Check Balanced Parentheses
+**Approach:** Use a **stack**. Push opening brackets; on closing brackets, pop and verify match. Empty stack at end = balanced.
+**Time:** O(n) | **Space:** O(n)
 
 ```java
 public static boolean isBalanced(String str) {
@@ -1014,6 +1049,8 @@ for (int i = n - 1; i >= 1; i--) {
 ---
 
 ## CP35. Find All Permutations of a String
+**Approach:** **Backtracking** — fix each character at the current index, recursively permute the rest, then swap back (backtrack). Total permutations = n!.
+**Time:** O(n! × n) | **Space:** O(n!) for storing results
 
 ```java
 public static List<String> permutations(String str) {
@@ -1041,6 +1078,8 @@ System.out.println(permutations("abc"));
 ---
 
 ## CP36. Longest Substring Without Repeating Characters
+**Sliding window** technique — maintain a window with no duplicates using a HashMap to track last seen index of each character. Expand right pointer; when duplicate found, move left pointer past the previous occurrence.
+**Time:** O(n) | **Space:** O(min(n, charset_size))
 
 ```java
 public static int longestUniqueSubstring(String str) {
@@ -1064,6 +1103,9 @@ System.out.println(longestUniqueSubstring("pwwkew"));     // 3 ("wke")
 ---
 
 ## CP37. Producer-Consumer Problem (Multithreading — asked at senior level)
+**Classic concurrency problem:** Producer adds items to a shared buffer; Consumer removes items. Uses `synchronized`, `wait()`, and `notifyAll()` for thread coordination. Producer waits when buffer is full; Consumer waits when buffer is empty.
+
+**SDET relevance:** Understanding thread synchronization is essential for parallel test execution and avoiding race conditions in shared test resources.
 
 ```java
 class SharedBuffer {
@@ -1092,6 +1134,11 @@ class SharedBuffer {
 ---
 
 ## CP38. Read Data from Properties/Excel File (Framework coding question)
+**Data-driven testing** reads test data from external files. Two common formats:
+1. **Properties file** — `java.util.Properties` for key-value config (browser, URL, credentials)
+2. **Excel file** — **Apache POI** library for structured test data (multiple rows/columns)
+
+**Interview tip:** Always mention closing resources (`try-with-resources`) and handling `IOException`.
 
 ```java
 // Read from properties file
