@@ -42,6 +42,16 @@ FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT
 
 ## Q2. SQL Joins?
 
+**Joins** combine rows from two or more tables based on a related column. Understanding joins is the **#1 most asked SQL topic** in SDET interviews.
+
+**6 types of joins:**
+- **INNER JOIN** — only matching rows from both tables
+- **LEFT JOIN** — all rows from left + matching from right (NULL if no match)
+- **RIGHT JOIN** — all rows from right + matching from left
+- **FULL OUTER JOIN** — all rows from both tables
+- **CROSS JOIN** — cartesian product (every row × every row)
+- **SELF JOIN** — table joined with itself (employee-manager relationships)
+
 ```sql
 -- 1. INNER JOIN: Only matching rows from both tables
 SELECT e.name, d.dept_name
@@ -156,6 +166,12 @@ SELECT name, salary FROM employees ORDER BY 2 DESC;  -- 2 = salary column
 
 ## Q6. How to handle NULL values?
 
+**NULL** represents an unknown or missing value. It is NOT zero, NOT empty string. Key rules:
+- `NULL = NULL` is **FALSE** (use `IS NULL` / `IS NOT NULL`)
+- NULL in arithmetic → NULL (`5 + NULL = NULL`)
+- Aggregate functions (`AVG`, `SUM`, `COUNT(column)`) **ignore NULLs**
+- `COUNT(*)` counts all rows including NULLs; `COUNT(column)` excludes NULLs
+
 ```sql
 -- 1. IS NULL / IS NOT NULL
 SELECT * FROM employees WHERE manager_id IS NULL;
@@ -192,6 +208,15 @@ SELECT COUNT(*) FROM employees;      -- counts ALL rows including NULL
 
 ## Q7. How to remove duplicates?
 
+**Five approaches** from simplest to most powerful:
+1. **DISTINCT** — removes duplicate rows from SELECT results
+2. **GROUP BY** — groups identical rows together
+3. **ROW_NUMBER()** — assigns unique numbers to identify duplicates
+4. **DELETE with subquery** — actually removes duplicate rows from the table
+5. **CTE + ROW_NUMBER** — cleanest approach for deleting duplicates
+
+**Interview tip:** Know how to both **find** duplicates (SELECT) and **delete** duplicates (keeping one copy).
+
 ```sql
 -- Method 1: DISTINCT
 SELECT DISTINCT department FROM employees;
@@ -225,6 +250,12 @@ DELETE FROM CTE WHERE rn > 1;
 
 ## Q8. CASE statement?
 
+**CASE** is SQL's equivalent of if-else logic. It evaluates conditions in order and returns the first matching result. Can be used in SELECT, UPDATE, ORDER BY, and WHERE clauses.
+
+**Two forms:**
+1. **Searched CASE** — `WHEN condition THEN result` (most flexible)
+2. **Simple CASE** — `CASE column WHEN value THEN result` (equality check only)
+
 ```sql
 -- Simple CASE
 SELECT name, salary,
@@ -257,7 +288,14 @@ END;
 
 ## Q9. What is CTE (Common Table Expression)?
 
-A **CTE** is a temporary named result set defined within a `WITH` clause, available only for the duration of that query.
+A **CTE** is a temporary named result set defined within a `WITH` clause, available only for the duration of that query. CTEs improve **readability** by breaking complex queries into named logical steps.
+
+**Key features:**
+- **Multiple CTEs** — chain them with commas; each can reference previous CTEs
+- **Recursive CTE** — can reference itself; used for hierarchical data (org charts, file trees)
+- **Not stored** — exists only during query execution (unlike views or temp tables)
+
+**CTE vs Subquery:** CTE is more readable, reusable within the same query, and supports recursion.
 
 ```sql
 -- Simple CTE
@@ -301,6 +339,8 @@ SELECT * FROM org_chart ORDER BY level;
 ---
 
 ## Q10. RANK() vs DENSE_RANK() vs ROW_NUMBER()?
+
+**Window functions** perform calculations across a set of rows related to the current row, without collapsing them into groups (unlike GROUP BY). These three ranking functions are the **most frequently asked window functions** in interviews.
 
 ```sql
 SELECT name, salary,
@@ -364,6 +404,13 @@ SELECT * FROM employees WHERE name LIKE '___';        -- exactly 3 characters
 ---
 
 ## Q13. Find Nth highest salary?
+
+This is the **#1 most asked SQL coding question** in Indian SDET interviews. Know multiple approaches:
+1. **DENSE_RANK()** — best and most versatile (handles ties correctly)
+2. **CTE + DENSE_RANK** — cleaner version with named result set
+3. **LIMIT/OFFSET** — MySQL-specific, simple but doesn't handle ties
+4. **Subquery** — works for 2nd highest; gets complex for Nth
+5. **Department-wise Nth highest** — common follow-up using PARTITION BY
 
 ```sql
 -- Method 1: DENSE_RANK (BEST for interviews)
@@ -527,6 +574,10 @@ SELECT name FROM employees_pune;
 
 ## Q18. Subquery vs JOIN?
 
+A **subquery** is a query nested inside another query. A **JOIN** combines tables in a single query. JOINs are generally **faster** because the optimizer can plan the entire execution at once, while correlated subqueries re-execute for each row.
+
+**Rule of thumb:** Use JOIN for combining data from multiple tables. Use subqueries for filtering based on aggregated values or when the subquery result is small.
+
 ```sql
 -- Subquery (nested query)
 SELECT * FROM employees
@@ -547,6 +598,11 @@ WHERE d.name = 'Engineering';
 ---
 
 ## Q19. Names starting with vowel?
+
+This is a common **pattern matching** interview question. Multiple approaches depending on the database:
+- **SUBSTRING + IN** — works on all databases
+- **REGEXP** — MySQL/PostgreSQL regex matching
+- **LIKE** — verbose but universally supported
 
 ```sql
 -- Method 1: SUBSTRING + IN
@@ -575,6 +631,8 @@ WHERE LOWER(SUBSTRING(name, 1, 1)) IN ('a','e','i','o','u')
 ---
 
 ## Q20. Find duplicate records?
+
+Use **GROUP BY + HAVING COUNT(*) > 1** to find duplicates. This groups rows by the columns that should be unique, then filters groups with more than one row.
 
 ```sql
 -- Find duplicates
@@ -606,6 +664,8 @@ WHERE email IN (
 
 ## Q22. Find employees with no department?
 
+Use **LEFT JOIN + WHERE IS NULL** pattern to find unmatched rows. This is faster than `NOT IN` with a subquery and handles NULLs correctly.
+
 ```sql
 SELECT e.* FROM employees e
 LEFT JOIN departments d ON e.dept_id = d.id
@@ -615,6 +675,8 @@ WHERE d.id IS NULL;
 ---
 
 ## Q23. Get current date/time?
+
+Date/time functions vary by database. Know the syntax for your target DB:
 
 ```sql
 SELECT NOW();                    -- MySQL: 2026-02-07 13:43:00
