@@ -190,7 +190,7 @@ New → Assigned → Open → In Progress → Fixed → Ready for Retest
                                             ↓
                                          Closed
 
-
+'''
 **💬 How to say it in an interview:**
 > "I manage the full bug life cycle in JIRA. When I find a bug, I log it with detailed steps to reproduce, expected vs actual result, screenshots, and a severity label. After the developer fixes it, they move it to 'Fixed' and I retest it. At Aflac, I had a critical payment bug that was marked 'Cannot Reproduce' by the developer. I recorded a video of the exact steps, attached the API response logs, and provided the test data — within 2 hours they reproduced it and it became a P1 fix."
 
@@ -232,7 +232,6 @@ My framework is built using Java, Selenium WebDriver, and TestNG. It follows the
 
 **Architecture:**
 
-```
 framework/
 ├── src/main/java/
 │   ├── pages/                    # Page Object classes
