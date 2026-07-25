@@ -94,21 +94,15 @@ in test automation, popular patterns include Page Object Model (POM), Factory Pa
 **Detailed Explanation:**
 
 **Sprint Planning (Start of Sprint):**
-- Duration: 2–4 hours for a 2-week sprint
 - Attendees: Product Owner, Scrum Master, Dev Team
-- Output: **Sprint Backlog** — list of committed user stories with tasks and estimates
-- Team agrees on a **sprint goal** (e.g., "Complete the payment module end-to-end")
 - As SDET: I estimate test effort for each story, identify automation candidates, raise any missing acceptance criteria
 
 **Sprint Review (End of Sprint):**
-- Duration: 1–2 hours
 - Team **demos** completed work to stakeholders and the Product Owner
-- PO accepts or rejects each story as **Done** or **Not Done**
-- Feedback collected for future sprints
 - As SDET: I show automation test results, coverage dashboards, and defect trends
 
 **Sprint Retrospective (After Review):**
-- Duration: 1 hour
+
 - Three questions: What went **well**? What didn't go well? What can we **improve**?
 - Output: Action items to make the next sprint better
 - As SDET: I raise issues like flaky tests, missing test data, late requirement changes
@@ -120,8 +114,6 @@ in test automation, popular patterns include Page Object Model (POM), Factory Pa
 
 **Simple Answer:**
 A user story is a requirement written from the user's perspective in plain English. It explains who needs something, what they need, and why — so the team understands the goal, not just the task.
-
-**Format:** `"As a [role], I want [feature], so that [benefit]."`
 
 **Example:** `"As a customer, I want to reset my password, so that I can regain access to my account."`
 
