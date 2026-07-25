@@ -1,6 +1,4 @@
 # Agile, SDLC, STLC, Framework Architecture & BDD
-## Vikrant Mishra — SDET Interview Prep
-
 ---
 
 # SELF-INTRODUCTION
@@ -52,10 +50,12 @@ Agile is a way of building software in small pieces (called sprints), instead of
 **Simple Answer:**
 The most popular in software teams is Scrum. Others like Kanban, SAFe(Scaled Agile Framework), and XP are used depending on team size and project type.
 
-**Scrum- **
+
+**Scrum-**
 1.Scrum is a widely used Agile framework for managing and delivering complex projects.
 2.Work is divided into 2-week sprints with roles including the Product Owner, Scrum Master, and Development Team; 
 3.Ceremonies following Sprint Planning → Daily Standup → Sprint Review → Sprint Retrospective.
+
 
 **Kanban-**
 1-Kanban is an Agile workflow management method that focuses on continuous delivery and improving the flow of work.
