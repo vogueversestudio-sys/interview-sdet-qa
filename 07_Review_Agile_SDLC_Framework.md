@@ -52,12 +52,13 @@ Agile is a way of building software in small pieces (called sprints), instead of
 **Simple Answer:**
 The most popular in software teams is Scrum. Others like Kanban, SAFe(Scaled Agile Framework), and XP are used depending on team size and project type.
 Scrum- 
-1.Scrum is a popular agile methodology that provides a framework for managing and completing complex projects.	
-2.Work is divided into 2-week sprints with roles including the Product Owner, Scrum Master, and Development Team; artifacts include the Product Backlog, Sprint Backlog, and Increment; ceremonies follow the sequence: Sprint Planning → Daily Standup → Sprint Review → Sprint Retrospective.
+1.Scrum is a widely used Agile framework for managing and delivering complex projects through iterative and incremental development.
+2.Work is divided into 2-week sprints with roles including the Product Owner, Scrum Master, and Development Team; 
+3.Ceremonies follow the sequence: Sprint Planning → Daily Standup → Sprint Review → Sprint Retrospective.
 Kanban-
-1-Kanban is another agile methodology that focuses on one task before starting another.
+1-Kanban is an Agile workflow management method that focuses on continuous delivery and improving the flow of work.
 2-The goal of Kanban is to create a smooth and continuous flow of work.
-3-Work flows continuously without fixed sprints using a visual board (To Do → In Progress → Testing → Done), focuses on limiting Work In Progress (WIP) to prevent overload, and is best suited for maintenance, support, and bug-fix teams
+3-Unlike Scrum, Kanban does not use fixed-length sprints.
 
 ---
 
