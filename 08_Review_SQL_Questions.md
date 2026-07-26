@@ -4,19 +4,9 @@
 
 ## Q1. WHERE vs HAVING clause?
 
-**Simple Answer:**
-- `WHERE` filters individual rows BEFORE grouping
-- `HAVING` filters groups AFTER `GROUP BY`
-- Think of it this way: `WHERE` says "which rows to include", `HAVING` says "which groups to keep"
+**💬 How to say it in an interview:**
+> "WHERE and HAVING both filter data, but at different stages. WHERE runs before grouping — it filters individual rows. HAVING runs after GROUP BY — it filters the groups. For example, if I want to find departments where the average salary is above 60,000, I cannot use WHERE with AVG() because the grouping hasn't happened yet. That's where HAVING comes in. I use this a lot in database validation — for example, verifying that no duplicate orders were created for the same customer."
 
-**Detailed Explanation:**
-
-| Aspect | WHERE | HAVING |
-|--------|-------|--------|
-| What it filters | **Individual rows** before grouping | **Groups** after GROUP BY |
-| Can use aggregate functions? | ❌ No (SUM, COUNT won't work here) | ✅ Yes |
-| Execution order | Runs before GROUP BY | Runs after GROUP BY |
-| Used with | SELECT, UPDATE, DELETE | Only with SELECT + GROUP BY |
 
 ```sql
 -- WHERE: filter individual rows before grouping
@@ -39,18 +29,6 @@ GROUP BY department
 HAVING AVG(salary) > 60000;   -- then: only departments with high average salary
 ```
 
-**SQL Execution Order — Know This by Heart:**
-```
-FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT
-```
-
-**💬 How to say it in an interview:**
-> "WHERE and HAVING both filter data, but at different stages. WHERE runs before grouping — it filters individual rows. HAVING runs after GROUP BY — it filters the groups. For example, if I want to find departments where the average salary is above 60,000, I cannot use WHERE with AVG() because the grouping hasn't happened yet. That's where HAVING comes in. I use this a lot in database validation — for example, verifying that no duplicate orders were created for the same customer."
-
-**⚡ Key Points:**
-- WHERE = before GROUP BY, filters rows, no aggregate functions
-- HAVING = after GROUP BY, filters groups, aggregate functions allowed
-- SQL runs in this order: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY
 
 ---
 
@@ -95,22 +73,6 @@ FROM employees e1
 JOIN employees e2 ON e1.manager_id = e2.id;
 ```
 
-**Visual Quick Reference:**
-```
-INNER JOIN:   Only the overlap (matching rows only)
-LEFT JOIN:    Everything from LEFT + overlap
-RIGHT JOIN:   Everything from RIGHT + overlap
-FULL JOIN:    Everything from both sides
-```
-
-**💬 How to say it in an interview:**
-> "I use SQL JOINs regularly for database validation in my test automation. For example, at Aflac, after running an API test that creates a new insurance policy, I would run a SQL query using INNER JOIN between the policy table and customer table to verify the correct customer was linked to the policy. I use LEFT JOIN specifically when I want to find records that do NOT have a match — like finding orders that have no associated payment record."
-
-**⚡ Key Points:**
-- INNER JOIN = only matching rows (most common)
-- LEFT JOIN = all from left + matches from right (use for "find records with no match")
-- SELF JOIN = same table joined with itself (manager/employee, parent/child)
-- Interview trick: "Employees with no department" = LEFT JOIN + WHERE dept IS NULL
 
 ---
 
