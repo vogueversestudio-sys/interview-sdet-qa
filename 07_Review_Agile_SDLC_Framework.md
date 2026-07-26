@@ -5,13 +5,13 @@
 
 > **Tip:** Memorise this and say it confidently in the first 2 minutes. Keep it under 3 minutes. Practice it out loud every day.
 
-"Hi, I'm Vikrant Mishra, a Senior SDET with over 8 years of experience across web, API, and biometric systems, specialising in test automation, API testing, and AI-assisted testing.
+Hi, I'm Vikrant Mishra. I'm a Senior SDET with 8+ years of experience in web automation, API testing, biometric testing, and AI-assisted testing.
 
-Right now I'm at Cloud Angles on the Personify Health platform, leading automation scripting and test strategy using Playwright, TypeScript, and REST Assured across both API and UI. I also mentor a QA automation team and use AI tools like Windsurf to speed up script development.
+Currently, I am working at Cloud Angles on the Personify Health platform, where I handle UI and API automation using Playwright, TypeScript, and REST Assured. I also contribute to test strategy, mentor QA automation team members, and use AI tools like Windsurf,Claude to improve automation efficiency.
 
-Before this, I spent two years at IDEMIA testing biometric systems — fingerprint, facial, and iris recognition. And earlier at Coforge, I work Selenium and Java frameworks for clients like Office Depot and Aflac.
+Previously, I worked at IDEMIA on biometric testing solutions such as fingerprint, facial, and iris recognition. Before that, at Coforge, I worked on Selenium and Java-based automation frameworks.
 
-My core stack is Selenium, Playwright, REST Assured, Java, and SQL. I'm now looking for a new role where I can bring this mix of hands-on automation and team leadership to a strong engineering team.
+My technical skills include Selenium, Playwright, REST Assured, Java, SQL, and AI-assisted automation. I am now looking for an opportunity where I can leverage my automation expertise and contribute to a strong engineering team.
 
 ---
 
@@ -29,7 +29,7 @@ In Agile, software is developed in small parts called sprints. After every sprin
 
 Agile focuses on flexibility, collaboration, customer feedback, and continuous delivery."
 
-Example:
+**Example:**
 "For example, instead of developing a complete application in one year, Agile teams deliver small features every 2–4 weeks and improve them based on feedback."
 
 
