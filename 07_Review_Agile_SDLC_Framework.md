@@ -23,7 +23,7 @@ My technical skills include Selenium, Playwright, REST Assured, Java, SQL, and A
 
 Interview Answer:
 
-"Agile is a project management and software development methodology that helps teams deliver valuable products faster by working in small increments.
+"Agile is a project management and software development methodology that helps teams deliver valuable products.
 
 In Agile, software is developed in small parts called sprints. After every sprint, the team delivers a working product, takes feedback from customers, and continuously improves the product.
 
@@ -60,9 +60,8 @@ Interview Answer:
 
 **Scrum:**
 
-"Scrum is the most widely used Agile framework for managing complex software projects.
-
-In Scrum, work is divided into fixed time periods called sprints, usually 2 weeks.
+ Scrum is the most widely used Agile framework for managing complex software projects.
+ In Scrum, work is divided into fixed time periods called sprints, usually 2 weeks.
 
 **The main roles in Scrum are:**
 
@@ -79,8 +78,7 @@ Sprint Retrospective"
 
 **Kanban:**
 
-"Kanban is an Agile workflow management method that focuses on continuous delivery and improving workflow.
-
+Kanban is an Agile workflow management method that focuses on continuous delivery and improving workflow.
 Unlike Scrum, Kanban does not use fixed-length sprints. It uses a visual board to track tasks and maintain a smooth flow of work."
 
 
