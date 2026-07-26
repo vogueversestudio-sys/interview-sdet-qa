@@ -21,9 +21,16 @@ My core stack is Selenium, Playwright, REST Assured, Java, and SQL. I'm now look
 
 ## Q1. What is Agile Methodology?
 
-**Simple Answer:**
-Agile mathology-Agile is an process thats managing projects and developing software that makes it easier for teams to deliver value product to their customers
-Agile is a way of building software in small pieces (called sprints), instead of building everything at once. The team delivers working software every 2–4 weeks, gets feedback, and improves continuously.
+Interview Answer:
+
+"Agile is a project management and software development methodology that helps teams deliver valuable products faster by working in small increments.
+
+In Agile, software is developed in small parts called sprints. After every sprint, the team delivers a working product, takes feedback from customers, and continuously improves the product.
+
+Agile focuses on flexibility, collaboration, customer feedback, and continuous delivery."
+
+Example:
+"For example, instead of developing a complete application in one year, Agile teams deliver small features every 2–4 weeks and improve them based on feedback."
 
 
 **SDLC Phases (Software Development Life Cycle):**
@@ -47,20 +54,34 @@ Agile is a way of building software in small pieces (called sprints), instead of
 
 ## Q2. Types of Agile Methodology?
 
-**Simple Answer:**
-The most popular in software teams is Scrum. Others like Kanban, SAFe(Scaled Agile Framework), and XP are used depending on team size and project type.
+Interview Answer:
 
+"Different types of Agile methodologies are used depending on project requirements and team size. The most popular Agile frameworks are Scrum, Kanban, SAFe, and Extreme Programming (XP)."
 
-**Scrum-**
-1.Scrum is a widely used Agile framework for managing and delivering complex projects.
-2.Work is divided into 2-week sprints with roles including the Product Owner, Scrum Master, and Development Team; 
-3.Ceremonies following Sprint Planning → Daily Standup → Sprint Review → Sprint Retrospective.
+**Scrum:**
 
+"Scrum is the most widely used Agile framework for managing complex software projects.
 
-**Kanban-**
-1-Kanban is an Agile workflow management method that focuses on continuous delivery and improving the flow of work.
-2-Unlike Scrum, Kanban does not use fixed-length sprints
-3-The goal of Kanban is to create a smooth and continuous flow of work.
+In Scrum, work is divided into fixed time periods called sprints, usually 2 weeks.
+
+**The main roles in Scrum are:**
+
+Product Owner
+Scrum Master
+Development Team
+
+**The main Scrum ceremonies are:**
+
+Sprint Planning
+Daily Standup
+Sprint Review
+Sprint Retrospective"
+
+**Kanban:**
+
+"Kanban is an Agile workflow management method that focuses on continuous delivery and improving workflow.
+
+Unlike Scrum, Kanban does not use fixed-length sprints. It uses a visual board to track tasks and maintain a smooth flow of work."
 
 
 ---
