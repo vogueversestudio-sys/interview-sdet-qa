@@ -132,9 +132,11 @@ in test automation, popular patterns include Page Object Model (POM), Factory Pa
 ## Q6. What are User Stories?
 
 **Simple Answer:**
+
 1- A user story is a simple description of a feature from the user's perspective.
 2- It usually follows the format: "As a user, I want [feature] so that [benefit].
 3- It helps the development and testing teams understand the requirement and ensures the feature delivers value to the user.
+
 ---
 
 ## Q7. Story Points?
