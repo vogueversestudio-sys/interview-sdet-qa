@@ -132,20 +132,17 @@ in test automation, popular patterns include Page Object Model (POM), Factory Pa
 ## Q6. What are User Stories?
 
 **Simple Answer:**
-A user story is a requirement written from the user's perspective in plain English. It explains who needs something, what they need, and why — so the team understands the goal, not just the task.
-
-**Example:** `"As a customer, I want to reset my password, so that I can regain access to my account."`
-
-**💬 How to say it in an interview:**
-> "As an SDET, I work very closely with user stories. During backlog grooming, I review the acceptance criteria and ask questions like — 'What happens if the user enters an invalid email format?' or 'Is there a character limit on this field?' These edge cases often get missed by developers if the QA doesn't raise them early. I also make sure every story has testable acceptance criteria before it enters the sprint — because if you can't test it, you can't say it's Done."
-
+1- A user story is a simple description of a feature from the user's perspective.
+2- It usually follows the format: "As a user, I want [feature] so that [benefit].
+3- It helps the development and testing teams understand the requirement and ensures the feature delivers value to the user.
 ---
 
 ## Q7. Story Points?
 
 **Simple Answer:**
-Story points are a way to measure how much effort a task takes — not in hours, but in relative complexity. A task worth 3 points is roughly 3x harder than a 1-point task.
-Story points consider three things: **complexity**, **volume of work**, and **uncertainty/risk**. Teams use the **Fibonacci scale**: 1, 2, 3, 5, 8, 13, 21 — because as work gets bigger, our estimates get less precise.
+1-Story points are used to estimate the effort required to complete a task. They are not based on hours but on how difficult and complex the task is compared to other tasks.
+2-Story points also consider the amount of work involved and any risks or uncertainties.
+3-Teams usually use the Fibonacci sequence (1, 2, 3, 5, 8, 13, 21) to estimate story points.
 
 **⚡ Key Points:**
 - Story points = effort, not time
@@ -161,8 +158,9 @@ Story points consider three things: **complexity**, **volume of work**, and **un
 - **Verification** = checking the work WHILE building — "Are we following the process correctly?"
 - **Validation** = checking the final product — "Does it actually work for the user?"
 
-**💬 How to say it in an interview:**
-> "I do both verification and validation in my work. Verification happens when I review requirements and test cases before execution — I'm checking that we have the right coverage and the right approach. Validation happens when I actually run the tests and verify the software does what the user needs. For example, at PersonifyHealth, during sprint review I would verify that our test cases covered all acceptance criteria, and then validate by showing the actual test execution results."
+> "I do both verification and validation in my work. 
+**Verification** Verification happens when I review requirements and test cases before execution — I'm checking that we have the right coverage and the right approach. 
+**Validation** Validation happens when I actually run the tests and verify the software does what the user needs. 
 
 
 ---
@@ -173,7 +171,6 @@ Story points consider three things: **complexity**, **volume of work**, and **un
 - **Severity** = how badly the bug impacts the system (set by the QA/tester)
 - **Priority** = how urgently it needs to be fixed (set by the business/PM)
 - They are NOT the same thing — a serious bug can sometimes be low priority, and a minor bug can be high priority.
-
 
 
 **The 4 Important Combinations — With Real Examples:**
@@ -190,22 +187,16 @@ Story points consider three things: **complexity**, **volume of work**, and **un
 ## Q10. Bug Life Cycle?
 
 **Simple Answer:**
-A bug goes through a journey from the moment it is found until it is fixed and confirmed closed. This journey has clear states, and as a QA, you own the bug from start to end.
-
-**Detailed Explanation:**
-
-New → Assigned → Open → In Progress → Fixed → Ready for Retest
-                                                      ↓
-                                               Retest by QA
-                                              ↙           ↘
-                                          Pass             Fail
-                                            ↓                ↓
-                                         Verified          Reopen → Assigned (cycle repeats)
-                                            ↓
-                                         Closed
+The Bug Life Cycle is the process a bug follows from the time it is reported until it is fixed and closed. The common stages are: New → Assigned → Open → Fixed → Retest → Verified → Closed. If the issue still exists after the fix, the bug is reopened and the cycle continues.
 
 **💬 How to say it in an interview:**
-> "I manage the full bug life cycle in JIRA. When I find a bug, I log it with detailed steps to reproduce, expected vs actual result, screenshots, and a severity label. After the developer fixes it, they move it to 'Fixed' and I retest it. At Aflac, I had a critical payment bug that was marked 'Cannot Reproduce' by the developer. I recorded a video of the exact steps, attached the API response logs, and provided the test data — within 2 hours they reproduced it and it became a P1 fix."
+> "I manage the full bug life cycle in JIRA. When I find a bug, I log it with detailed steps to reproduce, expected vs actual result, screenshots, and a severity label.
+>  After the developer fixes it, they move it to 'Fixed' and I retest it.
+
+**Error:** A developer accidentally writes the wrong formula.(Human mistake.)
+**Fault/Defect:** The incorrect formula exists in the code.
+**Bug:** The tester discovers and reports this defect as a bug.
+**Failure:** Users receive Incorrect behaviour observed when using the application.
 
 
 ---
