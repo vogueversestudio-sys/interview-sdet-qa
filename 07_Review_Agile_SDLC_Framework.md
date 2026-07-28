@@ -211,7 +211,33 @@ A Test Plan is a formal document that covers the complete testing strategy. It i
 
 ---
 
-## Q12. Entry Criteria vs Exit Criteria?
+ ## Q12. What is the difference between a test scenario and a test case.
+ A test scenario is a high-level description of what needs to be tested, 
+ whereas a test case is a detailed document that describes the steps, test data, expected results, and preconditions to verify a specific requirement.
+
+---
+
+**Smoke Testing:** Checks whether the build is stable for testing.(quick, high-level test performed on a new build to verify that the critical functionalities are working and the build is stable)
+**Sanity Testing:** Verifies a specific bug fix or small change.
+**Regression Testing:** Ensures existing functionality is unaffected by recent changes.(like - recent code changes, bug fixes, or new features have not affected the existing functionality of the application.)
+**Exploratory Testing:** Tests the application without predefined test cases to find hidden defects.
+
+---
+
+## Q13. how do you prioritise test case?
+I prioritize test cases based on business impact, risk, and critical functionality. My goal is to ensure that the most important features are tested first, especially when time is limited.
+
+---
+
+## Q14. What is difference between functional and non functional testing
+
+Software testing is broadly classified into Functional Testing and Non-Functional Testing. 
+Functional testing verifies what the application does according to the business requirements,
+whereas Non-Functional testing verifies how well the application performs in terms of performance, security, usability, and reliability.
+
+---
+
+## Q15. Entry Criteria vs Exit Criteria?
 
 **Simple Answer:**
 - **Entry Criteria** = the checklist of things that must be ready BEFORE testing starts
