@@ -4,8 +4,12 @@
 
 ## Q1. WHERE vs HAVING clause?
 
-**💬 How to say it in an interview:**
-> "WHERE and HAVING both filter data, but at different stages. WHERE runs before grouping — it filters individual rows. HAVING runs after GROUP BY — it filters the groups. For example, if I want to find departments where the average salary is above 60,000, I cannot use WHERE with AVG() because the grouping hasn't happened yet. That's where HAVING comes in. I use this a lot in database validation — for example, verifying that no duplicate orders were created for the same customer."
+
+WHERE and HAVING both filter data, but at different stages. 
+WHERE runs **before grouping** — it filters individual rows. 
+HAVING runs **after GROUP BY** — it filters the groups. 
+
+For example, if I want to find departments where the average salary is above 60,000, I cannot use WHERE with AVG() because the grouping hasn't happened yet. That's where HAVING comes in. I use this a lot in database validation — for example, verifying that no duplicate orders were created for the same customer
 
 
 ```sql
@@ -34,8 +38,15 @@ HAVING AVG(salary) > 60000;   -- then: only departments with high average salary
 
 ## Q2. SQL Joins?
 
-**Simple Answer:**
-JOINs are used to combine data from two tables based on a matching column. The most common is INNER JOIN (only matching rows). LEFT JOIN is the second most common (all rows from the left table, even if there's no match on the right).
+
+SQL JOINs are used to combine data from multiple tables based on a common column, usually a primary key and a foreign key. They help us retrieve related information stored across different tables
+
+INNER - Only matching rows
+LEFT - Everything from left + matches
+RIGHT - Everything from right + matches
+FULL - Everything from both tables
+CROSS - Every combination
+SELF - Same table joined to itself
 
 **All Types with Code:**
 
@@ -78,19 +89,18 @@ JOIN employees e2 ON e1.manager_id = e2.id;
 
 ## Q3. What are Aggregate Functions?
 
-**Simple Answer:**
-Aggregate functions take a bunch of rows and calculate a single summary value — like the total, average, minimum, or maximum. They always work with GROUP BY.
+Aggregate functions are SQL functions that perform calculations on multiple rows and return a single summarized value. They are commonly used for reporting and data validation.They always work with GROUP BY.
 
 **All Aggregate Functions:**
 
 | Function | What it Does | Example |
 |----------|-------------|---------|
-| `COUNT(*)` | Counts all rows | `SELECT COUNT(*) FROM employees;` |
-| `COUNT(col)` | Counts non-NULL values only | `SELECT COUNT(salary) FROM employees;` |
-| `SUM()` | Adds up all values | `SELECT SUM(salary) FROM employees;` |
-| `AVG()` | Calculates the average | `SELECT AVG(salary) FROM employees;` |
-| `MAX()` | Finds the highest value | `SELECT MAX(salary) FROM employees;` |
-| `MIN()` | Finds the lowest value | `SELECT MIN(salary) FROM employees;` |
+| `COUNT(*)` | Counts all rows | 
+| `COUNT(col)` | Counts non-NULL values only | 
+| `SUM()` | Adds up all values | `
+| `AVG()` | Calculates the average |
+| `MAX()` | Finds the highest value | 
+| `MIN()` | Finds the lowest value | 
 
 ```sql
 -- All together in one query (very common interview question)
@@ -105,20 +115,14 @@ GROUP BY department
 ORDER BY avg_salary DESC;
 ```
 
-**💬 How to say it in an interview:**
-> "I use aggregate functions a lot in database validation. For example, at Office Depot, after running a test that creates 10 orders, I would run a COUNT query to verify exactly 10 orders were inserted into the database. Or after a price update, I'd use SUM to verify the total order value matches the expected amount. COUNT(*) counts everything including NULLs, but COUNT(column) skips NULL values — that distinction trips people up."
 
-**⚡ Key Points:**
-- COUNT(*) counts ALL rows including NULLs; COUNT(column) skips NULLs
-- NULL values are ignored in SUM, AVG, MAX, MIN — only COUNT(*) includes them
-- Always use with GROUP BY when you need results per category
 
 ---
 
 ## Q4. What is GROUP BY?
 
 **Simple Answer:**
-GROUP BY takes rows that have the same value in a column and groups them together. You then apply an aggregate function (COUNT, SUM, AVG) to each group.
+GROUP BY is something I use constantly for data validation.GROUP BY takes rows that have the same value in a column and groups them together. You then apply an aggregate function (COUNT, SUM, AVG) to each group.
 
 ```sql
 -- How many employees are in each department?
@@ -138,20 +142,13 @@ FROM employees
 GROUP BY department, job_title;
 ```
 
-**💬 How to say it in an interview:**
-> "GROUP BY is something I use constantly for data validation. After a test run that creates records in the database, I use GROUP BY to count and verify. For example, at Aflac after creating 5 insurance claims for 3 different policy types, I'd GROUP BY policy_type and COUNT to confirm the right number of claims were created per type."
-
-**⚡ Key Points:**
-- Every column in SELECT that is NOT an aggregate function MUST be in GROUP BY
-- GROUP BY runs before HAVING but after WHERE
-- Use ORDER BY after GROUP BY to sort the results
 
 ---
 
 ## Q5. What is ORDER BY?
 
 **Simple Answer:**
-ORDER BY sorts the query results. By default it sorts from lowest to highest (ASC). Add DESC to sort from highest to lowest.
+ORDER BY is straightforward query — I use it to sort results. By default it sorts from lowest to highest (ASC). Add DESC to sort from highest to lowest.
 
 ```sql
 -- Ascending (lowest to highest — default)
@@ -167,9 +164,6 @@ SELECT * FROM employees ORDER BY department ASC, salary DESC;
 SELECT name, salary FROM employees ORDER BY 2 DESC;
 ```
 
-**💬 How to say it in an interview:**
-> "ORDER BY is straightforward — I use it to sort results. In testing, I often use ORDER BY when writing validation queries to check whether the latest record was inserted correctly. For example: SELECT * FROM orders ORDER BY created_at DESC LIMIT 1 — this gives me the most recent order so I can verify it against what my automated test just created."
-
 ---
 
 ## Q6. How to handle NULL values?
@@ -184,36 +178,14 @@ SELECT * FROM employees WHERE manager_id IS NULL;
 -- Find employees who DO have an email
 SELECT * FROM employees WHERE email IS NOT NULL;
 
--- COALESCE: returns the FIRST non-NULL value in the list
--- Great for showing a default when data is missing
-SELECT name, COALESCE(phone, email, 'No Contact Info') AS contact
-FROM employees;
-
--- IFNULL (MySQL): replace NULL with a default value
-SELECT name, IFNULL(salary, 0) AS salary FROM employees;
-
--- CASE: custom handling for NULL
-SELECT name,
-    CASE
-        WHEN salary IS NULL THEN 'Salary Not Assigned'
-        ELSE CAST(salary AS CHAR)
-    END AS salary_status
-FROM employees;
 
 -- IMPORTANT: NULL in aggregations is automatically ignored
-SELECT AVG(salary) FROM employees;   -- NULLs are excluded from the average
-SELECT COUNT(salary) FROM employees; -- counts only NON-NULL salary rows
-SELECT COUNT(*) FROM employees;      -- counts ALL rows INCLUDING those with NULL salary
-```
 
-**💬 How to say it in an interview:**
-> "NULL handling is important in database testing. I always use IS NULL and IS NOT NULL — never = NULL, because NULL is not equal to anything, not even itself. In my tests at Aflac, I had a scenario where a claim was submitted without a doctor's name, which stored NULL in the provider_name column. I used COALESCE in my validation query to handle this gracefully — if provider_name is NULL, show 'Not Specified'. This prevented my test from failing on a valid business scenario."
+```
 
 **⚡ Key Points:**
 - NULL ≠ 0 and NULL ≠ empty string. NULL means "no value"
 - Always use `IS NULL` not `= NULL`
-- COALESCE = returns first non-NULL value from a list
-- COUNT(*) includes NULLs; COUNT(column) excludes NULLs
 
 ---
 
@@ -244,13 +216,6 @@ WITH CTE AS (
 DELETE FROM CTE WHERE rn > 1;  -- delete all rows except the first occurrence
 ```
 
-**💬 How to say it in an interview:**
-> "Removing duplicates is a very common database validation task in testing. When I run automated tests that insert data, sometimes due to a bug, duplicate records get created. I first use ROW_NUMBER() with PARTITION BY to identify which rows are duplicates and see them. Then I use the CTE + DELETE approach to clean them up. I prefer this over DELETE with a subquery because the CTE is cleaner and easier to read and verify before running."
-
-**⚡ Key Points:**
-- DISTINCT = quick fix for SELECT queries
-- ROW_NUMBER() + PARTITION BY = professional way to find and remove actual duplicate rows
-- Always preview duplicates before deleting
 
 ---
 
