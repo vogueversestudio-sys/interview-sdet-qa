@@ -147,12 +147,12 @@ in test automation, popular patterns include Page Object Model (POM), Factory Pa
 ## Q8. Verification vs Validation?
 
 **Simple Answer:**
-- **Verification** = checking the work WHILE building — "Are we following the process correctly?"
-- **Validation** = checking the final product — "Does it actually work for the user?"
+- **Verification** = checking the work WHILE building ,"Are we following the process correctly?"
+- **Validation** = checking the final product, "Does it actually work for the user?"
 
-> "I do both verification and validation in my work. 
-**Verification** Verification happens when I review requirements and test cases before execution — I'm checking that we have the right coverage and the right approach. 
-**Validation** Validation happens when I actually run the tests and verify the software does what the user needs. 
+I do both verification and validation in my work. 
+**Verification**  happens when I review requirements and test cases before execution — I'm checking that we have the right coverage and the right approach. 
+**Validation**  happens when I actually run the tests and verify the software does what the user needs. 
 
 
 ---
