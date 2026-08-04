@@ -32,6 +32,7 @@ Agile focuses on flexibility, collaboration, customer feedback, and continuous d
 **Example:**
 "For example, instead of developing a complete application in one year, Agile teams deliver small features every 2–4 weeks and improve them based on feedback."
 
+**Waterfall** is a traditional model where each phase (Requirement → Design → Development → Testing → Deployment) is completed before moving to the next phase.The entire application is delivered after all phases are completed.
 
 **SDLC Phases (Software Development Life Cycle):**
 1. Requirement Gathering & Analysis
@@ -209,8 +210,12 @@ A Test Plan is a formal document that covers the complete testing strategy. It i
 
 **Smoke Testing:** Checks whether the build is stable for testing.(quick, high-level test performed on a new build to verify that the critical functionalities are working and the build is stable)
 **Sanity Testing:** Verifies a specific bug fix or small change.
+
 **Regression Testing:** Ensures existing functionality is unaffected by recent changes.(like - recent code changes, bug fixes, or new features have not affected the existing functionality of the application.)
 **Exploratory Testing:** Tests the application without predefined test cases to find hidden defects.
+
+**Black Box** Testing checks whether the application works correctly based on requirements without looking at the code.
+**White Box** Testing checks the internal code structure, logic, and paths to ensure the code works as expected.
 
 ---
 
