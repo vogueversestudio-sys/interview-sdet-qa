@@ -179,11 +179,11 @@ I do both verification and validation in my work.
 ## Q10. Bug Life Cycle?
 
 **Simple Answer:**
-The Bug Life Cycle is the process a bug follows from the time it is reported until it is fixed and closed. The common stages are: New → Assigned → Open → Fixed → Retest → Verified → Closed. If the issue still exists after the fix, the bug is reopened and the cycle continues.
+Bug Life Cycle is the journey of a bug from the time it is found until it is closed.
+The common stages are: New → Assigned → Open → Fixed → Retest → Verified → Closed.
+If the issue still exists after the fix, the bug is reopened and the cycle continues.
 
-**💬 How to say it in an interview:**
-> "I manage the full bug life cycle in JIRA. When I find a bug, I log it with detailed steps to reproduce, expected vs actual result, screenshots, and a severity label.
->  After the developer fixes it, they move it to 'Fixed' and I retest it.
+I manage the full bug life cycle in JIRA. When I find a bug, I log it with detailed steps to reproduce, expected vs actual result, screenshots, and a severity label. After the developer fixes it, they move it to 'Fixed' and I retest it.
 
 **Error:** A developer accidentally writes the wrong formula.(Human mistake.)
 **Fault/Defect:** The incorrect formula exists in the code.
