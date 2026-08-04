@@ -136,8 +136,7 @@ in test automation, popular patterns include Page Object Model (POM), Factory Pa
 
 **Simple Answer:**
 1-Story points are used to estimate the effort required to complete a task. They are not based on hours but on how difficult and complex the task is compared to other tasks.
-2-Story points also consider the amount of work involved and any risks or uncertainties.
-3-Teams usually use the Fibonacci sequence (1, 2, 3, 5, 8, 13, 21) to estimate story points.
+2-Teams usually use the Fibonacci sequence (1, 2, 3, 5, 8, 13, 21) to estimate story points.
 
 **⚡ Key Points:**
 - Story points = effort, not time
