@@ -204,7 +204,7 @@ A Test Plan is a formal document that covers the complete testing strategy. It i
 
  ## Q12. What is the difference between a test scenario and a test case.
  A test scenario is a high-level description of what needs to be tested, 
- whereas a test case is a detailed document that describes the steps, test data, expected results, and preconditions to verify a specific requirement.
+ And a test case is a detailed document that describes the steps, test data, expected results, and preconditions to verify a specific requirement.
 
 ---
 
