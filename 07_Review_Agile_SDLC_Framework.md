@@ -106,25 +106,18 @@ in test automation, popular patterns include Page Object Model (POM), Factory Pa
 ## Q5. Sprint Planning vs Sprint Review vs Sprint Retrospective?
 
 **Simple Answer:**
-- **Sprint Planning** = at the START — decide what to build this sprint
-- **Sprint Review** = at the END — show what was built
-- **Sprint Retrospective** = after the review — discuss how to improve as a team
+- **Sprint Planning** = At the START Sprint , decide what to build this sprint
+  Attendees: Product Owner, Scrum Master, Dev Team
+  As SDET: I estimate test effort for each story, identify automation candidates, raise any missing acceptance criteria
 
-**Detailed Explanation:**
+- **Sprint Review** = At the END Sprint, show what was built
+  Team **demos** completed work to stakeholders and the Product Owner
+  As SDET: I show automation test results, coverage dashboards, and defect trends
 
-**Sprint Planning (Start of Sprint):**
-- Attendees: Product Owner, Scrum Master, Dev Team
-- As SDET: I estimate test effort for each story, identify automation candidates, raise any missing acceptance criteria
-
-**Sprint Review (End of Sprint):**
-- Team **demos** completed work to stakeholders and the Product Owner
-- As SDET: I show automation test results, coverage dashboards, and defect trends
-
-**Sprint Retrospective (After Review):**
-
-- Three questions: What went **well**? What didn't go well? What can we **improve**?
-- Output: Action items to make the next sprint better
-- As SDET: I raise issues like flaky tests, missing test data, late requirement changes
+- **Sprint Retrospective** = After the review , discuss how to improve as a team
+  Three questions: What went **well**? What didn't go well? What can we **improve**?
+  Output: Action items to make the next sprint better
+  As SDET: I raise issues like flaky tests, missing test data, late requirement changes
 
 
 ---
