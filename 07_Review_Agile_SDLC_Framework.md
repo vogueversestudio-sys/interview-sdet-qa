@@ -139,8 +139,6 @@ in test automation, popular patterns include Page Object Model (POM), Factory Pa
 2-Teams usually use the Fibonacci sequence (1, 2, 3, 5, 8, 13, 21) to estimate story points.
 
 **⚡ Key Points:**
-- Story points = effort, not time
-- Fibonacci scale: 1, 2, 3, 5, 8, 13, 21
 - As SDET, you estimate TEST effort separately from dev effort
 - Planning Poker = team votes together to agree on points
 
