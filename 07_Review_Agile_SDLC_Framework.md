@@ -226,9 +226,10 @@ I prioritize test cases based on business impact, risk, and critical functionali
 
 ## Q14. What is difference between functional and non functional testing
 
-Software testing is broadly classified into Functional Testing and Non-Functional Testing. 
-Functional testing verifies what the application does according to the business requirements,
-whereas Non-Functional testing verifies how well the application performs in terms of performance, security, usability, and reliability.
+Software testing is classified into Functional Testing and Non-Functional Testing.
+
+Functional testing verifies what the application does according to the business requirements.
+And Non-Functional testing verifies how well the application performs in terms of performance, security, usability.
 
 ---
 
