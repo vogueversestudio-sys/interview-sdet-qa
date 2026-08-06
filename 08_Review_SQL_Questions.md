@@ -5,33 +5,21 @@
 ## Q1. WHERE vs HAVING clause?
 
 
-WHERE and HAVING both filter data, but at different stages. 
-WHERE runs **before grouping** — it filters individual rows. 
-HAVING runs **after GROUP BY** — it filters the groups. 
+The main difference is when the filtering happens.
 
-For example, if I want to find departments where the average salary is above 60,000, I cannot use WHERE with AVG() because the grouping hasn't happened yet. That's where HAVING comes in. I use this a lot in database validation — for example, verifying that no duplicate orders were created for the same customer
+**WHERE** filters rows before grouping or aggregation.
+**HAVING** filters the aggregated result after the GROUP BY.
 
+**For example**, if I want all employees from the QA department, I use WHERE Department = 'QA'.
 
-```sql
--- WHERE: filter individual rows before grouping
-SELECT department, COUNT(*) AS emp_count
-FROM employees
-WHERE salary > 50000          -- filter rows first
-GROUP BY department;
+If I want departments having more than 10 employees, I use:
 
--- HAVING: filter groups after grouping
-SELECT department, COUNT(*) AS emp_count
-FROM employees
-GROUP BY department
-HAVING COUNT(*) > 5;          -- filter groups that have more than 5 employees
+SELECT Department, COUNT(*)
+FROM Employee
+GROUP BY Department
+HAVING COUNT(*) > 10;
 
--- Both together (most common in interviews)
-SELECT department, AVG(salary) AS avg_sal
-FROM employees
-WHERE status = 'Active'       -- first: only active employees
-GROUP BY department
-HAVING AVG(salary) > 60000;   -- then: only departments with high average salary
-```
+As an SDET, I use WHERE  while validating API/database data, And HAVING is useful when validating reporting or analytics data.
 
 
 ---
@@ -114,7 +102,7 @@ FROM employees
 GROUP BY department
 ORDER BY avg_salary DESC;
 ```
-
+In automation, I frequently use aggregate functions to validate totals returned by APIs or reports against database values.
 
 
 ---
