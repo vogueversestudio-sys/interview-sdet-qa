@@ -1,0 +1,203 @@
+# Senior SDET (9 Years Experience) – Interview-Style SQL Answers
+
+## Q1. WHERE vs HAVING Clause?
+
+**Answer:**
+
+"The main difference is that `WHERE` filters records before aggregation, whereas `HAVING` filters records after aggregation. 
+
+For example, if I want employees from the QA department, I use `WHERE`. If I want departments with more than 10 employees, I use `HAVING` after `GROUP BY`. 
+
+In my automation projects, I've used `WHERE` extensively for validating specific database records and `HAVING` while validating reports and aggregated API data."
+
+---
+
+## Q2. SQL Joins?
+
+**Answer:**
+
+"Joins are used to retrieve related data from multiple tables. The joins I commonly use are INNER JOIN, LEFT JOIN, RIGHT JOIN, and occasionally FULL OUTER JOIN. In my day-to-day work as an SDET, I mostly use INNER and LEFT JOINs. For example, after placing an order through an API, I join the Orders and Customers tables to verify that the correct customer and order details are stored in the database."
+
+---
+
+## Q3. What are Aggregate Functions?
+
+**Answer:**
+
+"Aggregate functions perform calculations on multiple rows and return a single result. Common functions are COUNT, SUM, AVG, MAX, and MIN. I frequently use these functions during database validation to compare totals, counts, or average values returned by reports and APIs with what's stored in the database."
+
+---
+
+## Q4. What is GROUP BY?
+
+**Answer:**
+
+"`GROUP BY` is used to group rows that have the same values into summary rows. It's typically used with aggregate functions like COUNT or SUM. In testing, I've used `GROUP BY` to validate reporting data, such as verifying the number of orders per customer or transactions per day."
+
+---
+
+## Q5. What is ORDER BY?
+
+**Answer:**
+
+"`ORDER BY` is used to sort query results in ascending or descending order. I often use it while validating APIs that support sorting functionality, ensuring the records returned by the API match the order stored in the database."
+
+---
+
+## Q6. How do you handle NULL values?
+
+**Answer:**
+
+"NULL represents missing or unknown data. We handle it using `IS NULL`, `IS NOT NULL`, or functions like `COALESCE` or `IFNULL`, depending on the database. During automation, I always validate how applications handle NULL values because many production issues occur due to unexpected null data."
+
+---
+
+## Q7. How do you remove duplicates?
+
+**Answer:**
+
+"If I only need unique results, I use `DISTINCT`. If I need to remove duplicate records from a table while keeping one record, I usually use `ROW_NUMBER()` with a CTE. That's the approach I've used in data cleanup and validation activities."
+
+---
+
+## Q8. What is a CASE Statement?
+
+**Answer:**
+
+"The `CASE` statement works like an IF-ELSE condition in SQL. It allows us to return different values based on specific conditions. I've used it while validating business rules directly in SQL, such as categorizing employees into salary bands or assigning statuses."
+
+---
+
+## Q9. What is a CTE (Common Table Expression)?
+
+**Answer:**
+
+"A CTE is a temporary named result set that makes complex SQL queries easier to read and maintain. I prefer CTEs over deeply nested subqueries because they improve readability, especially when working with large validation queries."
+
+---
+
+## Q10. RANK() vs DENSE_RANK() vs ROW_NUMBER()?
+
+**Answer:**
+
+"`ROW_NUMBER()` assigns a unique number to every row. `RANK()` assigns the same rank to duplicate values but skips the next rank. `DENSE_RANK()` also gives the same rank to duplicates but doesn't skip numbers. I mostly use `ROW_NUMBER()` for removing duplicates and `DENSE_RANK()` when finding the Nth highest salary."
+
+---
+
+## Q11. DELETE vs TRUNCATE vs DROP?
+
+**Answer:**
+
+"`DELETE` removes selected rows and supports a WHERE clause. `TRUNCATE` removes all rows quickly and resets identity values. `DROP` removes the entire table, including its structure. In test environments, I usually use DELETE because it's safer and allows selective cleanup."
+
+---
+
+## Q12. What is the LIKE operator?
+
+**Answer:**
+
+"`LIKE` is used for pattern matching. The `%` wildcard represents multiple characters, while `_` represents a single character. I've used it while validating search functionality where users search records using partial names."
+
+---
+
+## Q13. How do you find the Nth highest salary?
+
+**Answer:**
+
+"My preferred approach is using `DENSE_RANK()` because it handles duplicate salaries correctly. I create a ranking based on salary in descending order and then retrieve the required rank. It's more reliable than using nested TOP queries."
+
+---
+
+## Q14. What is a Stored Procedure?
+
+**Answer:**
+
+"A stored procedure is a precompiled SQL program stored in the database. It improves performance, promotes code reuse, and enhances security. In my projects, I've validated stored procedures that process batch jobs, generate reports, and perform complex business logic."
+
+---
+
+## Q15. How do you optimize a SQL query?
+
+**Answer:**
+
+"I usually start by reviewing the execution plan. Then I ensure proper indexing, avoid `SELECT *`, filter data as early as possible using WHERE clauses, minimize unnecessary subqueries, and optimize joins. As an SDET, I've worked with developers to identify slow-running queries during performance testing."
+
+---
+
+## Q16. What is Indexing?
+
+**Answer:**
+
+"An index improves query performance by reducing the amount of data the database needs to scan. The two main types are Clustered and Non-Clustered indexes. While indexes improve read performance, they slightly impact insert and update operations because the indexes also need to be maintained."
+
+---
+
+## Q17. UNION vs UNION ALL?
+
+**Answer:**
+
+"`UNION` combines results and removes duplicate records, whereas `UNION ALL` keeps duplicates and performs faster. If duplicate removal isn't required, I always prefer `UNION ALL` because it's more efficient."
+
+---
+
+## Q18. Subquery vs JOIN?
+
+**Answer:**
+
+"A subquery is a query inside another query, while a JOIN combines data from multiple tables. For most business scenarios, I prefer JOINs because they're generally easier to read and perform better. I use subqueries only when they make the logic clearer or are required for specific filtering."
+
+---
+
+## Q19. How do you find names starting with a vowel?
+
+**Answer:**
+
+"I would use the `LIKE` operator with multiple conditions for A, E, I, O, and U, or use a regular expression if the database supports it. This is a common SQL interview question to test pattern matching."
+
+---
+
+## Q20. How do you find duplicate records?
+
+**Answer:**
+
+"I group records using `GROUP BY` and then use `HAVING COUNT(*) > 1` to identify duplicates. If the duplicates need to be removed, I use `ROW_NUMBER()` with a CTE to keep one record and delete the remaining duplicates."
+
+---
+
+## Q21. Primary Key vs Foreign Key vs Unique Key?
+
+**Answer:**
+
+"A Primary Key uniquely identifies each record and doesn't allow NULL values. A Foreign Key creates a relationship between tables and maintains referential integrity. A Unique Key ensures uniqueness but typically allows NULL values depending on the database. During API testing, I validate these relationships to ensure data integrity across tables."
+
+---
+
+## Q22. How do you find employees with no department?
+
+**Answer:**
+
+"I use a LEFT JOIN between the Employee and Department tables and then filter where the department ID is NULL. This returns employees who don't have a matching department record."
+
+---
+
+## Q23. How do you get the current date and time?
+
+**Answer:**
+
+"It depends on the database. For example, SQL Server uses `GETDATE()`, MySQL uses `NOW()`, PostgreSQL uses `CURRENT_TIMESTAMP`, and Oracle uses `SYSDATE`. I use these functions while validating timestamp fields during API and database testing."
+
+---
+
+## Q24. What is a View?
+
+**Answer:**
+
+"A View is a virtual table created from one or more SQL queries. It doesn't store data itself unless it's a materialized view. Views simplify complex queries, improve security, and make reporting easier. I've frequently used views while validating reporting applications."
+
+---
+
+## Q25. What is a Trigger?
+
+**Answer:**
+
+"A Trigger is a database object that executes automatically when an INSERT, UPDATE, or DELETE operation occurs. It's commonly used for audit logging, enforcing business rules, or maintaining history tables. In one of my projects, we verified that every user update through the API automatically created an audit record using a trigger, and our automation validated both the main table and the audit table."
