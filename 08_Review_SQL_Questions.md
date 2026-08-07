@@ -52,80 +52,51 @@ while Cross and Full Joins are used in specific scenarios depending on the busin
 
 ## Q3. What are Aggregate Functions?
 
-Aggregate functions are SQL functions that perform calculations on multiple rows and return a single summarized value. They are commonly used for reporting and data validation.They always work with GROUP BY.
+Aggregate functions are SQL functions that perform calculations on a group of rows and return a single summarized value.
+They are mainly used for reporting, data analysis, and validation. 
+Aggregate functions can be used with or without the **GROUP BY** clause. When used with GROUP BY, they return one result for each group.
 
-**All Aggregate Functions:**
+In automation testing, I use aggregate functions to validate data between the UI, APIs, and the database. For example, I use COUNT() to verify the number of records, SUM() to validate totals in reports, and AVG(), MAX(), or MIN() to ensure calculations are accurate.
 
-| Function | What it Does | Example |
-|----------|-------------|---------|
-| `COUNT(*)` | Counts all rows | 
-| `COUNT(col)` | Counts non-NULL values only | 
-| `SUM()` | Adds up all values | `
-| `AVG()` | Calculates the average |
-| `MAX()` | Finds the highest value | 
-| `MIN()` | Finds the lowest value | 
+The most commonly used aggregate functions are:
 
-```sql
--- All together in one query (very common interview question)
-SELECT department,
-    COUNT(*)          AS total_employees,
-    AVG(salary)       AS avg_salary,
-    MAX(salary)       AS highest_salary,
-    MIN(salary)       AS lowest_salary,
-    SUM(salary)       AS total_salary_cost
-FROM employees
-GROUP BY department
-ORDER BY avg_salary DESC;
-```
-In automation, I frequently use aggregate functions to validate totals returned by APIs or reports against database values.
+COUNT() – Counts the number of rows.
+SUM() – Returns the total of a numeric column.
+AVG() – Calculates the average value.
+MAX() – Returns the highest value.
+MIN() – Returns the lowest value.
 
+Q - Do aggregate functions always require GROUP BY? - 
+No. Aggregate functions can be used without GROUP BY, in which case they return a single result for the entire table. GROUP BY is only needed when you want aggregate results for each group.
 
 ---
 
 ## Q4. What is GROUP BY?
 
 **Simple Answer:**
-GROUP BY is something I use constantly for data validation.GROUP BY takes rows that have the same value in a column and groups them together. You then apply an aggregate function (COUNT, SUM, AVG) to each group.
+GROUP BY is used to group rows that have the same values in one or more columns. It is commonly used with aggregate functions like COUNT(), SUM(), AVG(), MAX(), and MIN() to calculate summary results for each group
 
-```sql
--- How many employees are in each department?
-SELECT department, COUNT(*) AS emp_count
-FROM employees
-GROUP BY department;
+In automation testing, I frequently use GROUP BY for database validation.
+For example, I compare the number of records displayed in the UI or returned by an API with the grouped results from the database. 
+It's also useful for validating reports, dashboards, and business summaries
 
--- Average salary per department, highest first
-SELECT department, AVG(salary) AS avg_salary
-FROM employees
-GROUP BY department
-ORDER BY avg_salary DESC;
-
--- Group by multiple columns
-SELECT department, job_title, COUNT(*) AS count
-FROM employees
-GROUP BY department, job_title;
-```
-
+Q- Can we use GROUP BY without an aggregate function?- 
+Yes, but it's generally equivalent to using SELECT DISTINCT on those columns. GROUP BY is most useful when it's combined with aggregate functions to summarize data.
 
 ---
 
 ## Q5. What is ORDER BY?
 
 **Simple Answer:**
-ORDER BY is straightforward query — I use it to sort results. By default it sorts from lowest to highest (ASC). Add DESC to sort from highest to lowest.
+**ORDER BY** is used to sort the result set of a query based on one or more columns. 
+By default, SQL sorts the data in ascending order **(ASC)**. To sort in descending order, we use the **DESC** keyword.
 
-```sql
--- Ascending (lowest to highest — default)
-SELECT * FROM employees ORDER BY salary ASC;
+In automation testing, I use ORDER BY to retrieve data in a predictable order before comparing it with API responses or UI results. 
+For example, if a report should display the highest-paid employees first, I validate it using **ORDER BY** salary **DESC**
 
--- Descending (highest to lowest)
-SELECT * FROM employees ORDER BY salary DESC;
-
--- Sort by multiple columns: first by department alphabetically, then by salary highest first
-SELECT * FROM employees ORDER BY department ASC, salary DESC;
-
--- Sort by column position (2 = second column in SELECT)
-SELECT name, salary FROM employees ORDER BY 2 DESC;
-```
+Q: What is the execution order of GROUP BY and ORDER BY?- 
+**GROUP BY** groups the data first, and then **ORDER BY** sorts the final result set.
+That's why we can sort aggregated values, such as AVG(salary) or COUNT(*), after grouping
 
 ---
 
@@ -134,17 +105,7 @@ SELECT name, salary FROM employees ORDER BY 2 DESC;
 **Simple Answer:**
 NULL means "no value" or "unknown" — it is NOT zero, NOT empty string. You cannot check for NULL using `= NULL`. You must use `IS NULL` or `IS NOT NULL`.
 
-```sql
--- Find employees with no manager assigned
-SELECT * FROM employees WHERE manager_id IS NULL;
-
--- Find employees who DO have an email
-SELECT * FROM employees WHERE email IS NOT NULL;
-
-
 -- IMPORTANT: NULL in aggregations is automatically ignored
-
-```
 
 **⚡ Key Points:**
 - NULL ≠ 0 and NULL ≠ empty string. NULL means "no value"
@@ -154,127 +115,34 @@ SELECT * FROM employees WHERE email IS NOT NULL;
 
 ## Q7. How to remove duplicates?
 
-**Simple Answer:**
-Use `DISTINCT` to remove duplicates in a SELECT query. To find and delete actual duplicate rows from a table, use `ROW_NUMBER()` with a CTE — this is the most professional approach.
+There are two common ways to handle duplicates in SQL:
 
-```sql
--- Quick way: DISTINCT in SELECT
-SELECT DISTINCT department FROM employees;
+Use DISTINCT to remove duplicate values from the query result.
+Use ROW_NUMBER() with a CTE to identify and permanently delete duplicate rows from a table. This is the preferred approach in real-world projects.
 
--- Find WHICH rows are duplicates (see them before deleting)
-SELECT *, ROW_NUMBER() OVER (
-    PARTITION BY name, email    -- group by columns that define "duplicate"
-    ORDER BY id                 -- keep the lowest ID (first inserted)
-) AS row_num
-FROM employees;
--- row_num > 1 means it's a duplicate
-
--- DELETE duplicates cleanly using CTE (most professional method)
-WITH CTE AS (
-    SELECT *, ROW_NUMBER() OVER (
-        PARTITION BY name, email ORDER BY id
-    ) AS rn
-    FROM employees
-)
-DELETE FROM CTE WHERE rn > 1;  -- delete all rows except the first occurrence
-```
-
+If I only need unique values in the output, I use DISTINCT. 
+If duplicate records actually exist in the table, I use ROW_NUMBER() with a Common Table Expression (CTE) to identify and safely remove the duplicates while keeping one original record
 
 ---
 
 ## Q8. CASE Statement?
 
-**Simple Answer:**
-CASE is like an if-else statement in SQL. It checks a condition and returns different values based on the result. Very useful for labelling, categorising, or conditional updates.
+The CASE statement is used to implement conditional logic in SQL. It works like an if-else statement in programming languages. Based on one or more conditions, it returns different values. It is commonly used in SELECT, UPDATE, ORDER BY, and sometimes WHERE clauses.
 
-```sql
--- Label employees by salary level
-SELECT name, salary,
-    CASE
-        WHEN salary >= 100000 THEN 'Senior Level'
-        WHEN salary >= 60000  THEN 'Mid Level'
-        WHEN salary >= 30000  THEN 'Junior Level'
-        ELSE 'Intern'
-    END AS salary_band
-FROM employees;
-
--- Use CASE in UPDATE (update multiple rows with different values in one query)
-UPDATE employees
-SET bonus = CASE
-    WHEN performance = 'Excellent' THEN salary * 0.20
-    WHEN performance = 'Good'      THEN salary * 0.10
-    ELSE salary * 0.05
-END;
-
--- Use CASE in ORDER BY for custom sort order
-SELECT * FROM employees
-ORDER BY CASE department
-    WHEN 'Engineering' THEN 1
-    WHEN 'QA'          THEN 2
-    WHEN 'Sales'       THEN 3
-    ELSE 4
-END;
-```
-
-**💬 How to say it in an interview:**
-> "I use CASE statements in database validation queries to categorise data. For example, at Office Depot, I wrote a validation query that used CASE to label orders as 'Processing', 'Shipped', or 'Delivered' based on their status code — and then I asserted in my test that the newly created order was in 'Processing' status. It makes the output much more readable than raw status codes."
+In automation testing, I use CASE statements to validate business rules directly in SQL. 
+For example, I categorize records, calculate expected values based on conditions, or verify that data falls into the correct business category. 
+It helps reduce validation logic in the test code
 
 ---
 
 ## Q9. What is CTE (Common Table Expression)?
 
 **Simple Answer:**
-A CTE is a temporary, named result set that you define at the top of your query using the `WITH` keyword. Think of it as giving a name to a subquery so your code is easier to read and reuse. It only exists for the duration of that single query.
+A CTE is a temporary, named result set that you define at the top of your query using the `WITH` keyword. It exists only for the duration of a single SQL statement and makes complex queries easier to read, write, and maintain. A CTE can also be referenced multiple times within the same query.
 
-```sql
--- Simple CTE: name a subquery so it's reusable
-WITH active_employees AS (
-    SELECT * FROM employees WHERE status = 'Active'
-)
-SELECT department, COUNT(*) AS count
-FROM active_employees
-GROUP BY department;
-
--- Multiple CTEs (chain them together)
-WITH
-dept_stats AS (
-    SELECT dept_id, AVG(salary) AS avg_salary
-    FROM employees
-    GROUP BY dept_id
-),
-high_earners AS (
-    SELECT e.name, e.salary, d.avg_salary
-    FROM employees e
-    JOIN dept_stats d ON e.dept_id = d.dept_id
-    WHERE e.salary > d.avg_salary    -- employees earning above their department average
-)
-SELECT * FROM high_earners ORDER BY salary DESC;
-
--- Recursive CTE: used for tree/hierarchy data (org chart, categories)
-WITH RECURSIVE org_chart AS (
-    -- Base case: top-level managers (no manager above them)
-    SELECT id, name, manager_id, 1 AS level
-    FROM employees
-    WHERE manager_id IS NULL
-
-    UNION ALL
-
-    -- Recursive case: find everyone who reports to someone in the previous level
-    SELECT e.id, e.name, e.manager_id, oc.level + 1
-    FROM employees e
-    JOIN org_chart oc ON e.manager_id = oc.id
-)
-SELECT * FROM org_chart ORDER BY level;
-```
-
-**💬 How to say it in an interview:**
-> "I prefer CTEs over nested subqueries because they are much easier to read, debug, and maintain. In my test validation queries, I often need multi-step logic — first filter active accounts, then find the ones with overdue payments. With CTEs, I can break this into clear steps that read like a story. It's much cleaner than putting one subquery inside another. The Nth highest salary problem is a classic example where CTE + DENSE_RANK is the cleanest solution."
-
-**⚡ Key Points:**
-- CTE = temporary named result set, lives only for one query
-- Defined with `WITH name AS (SELECT ...)`
-- Much cleaner alternative to deeply nested subqueries
-- Recursive CTE = for hierarchical data (org charts, categories, file paths)
+In automation testing, I use CTEs to simplify complex validation queries. 
+Instead of writing deeply nested subqueries, I create CTEs to organize the logic, making the SQL easier to understand and maintain. 
+This is especially useful when validating reports, dashboards, or comparing intermediate datasets
 
 ---
 
