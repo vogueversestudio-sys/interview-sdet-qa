@@ -7,10 +7,10 @@
 
 The main difference is when the filtering happens.
 
-    **WHERE** -filters rows before grouping or aggregation.
-    **HAVING** -filters the aggregated result after the GROUP BY.
+   **WHERE** -filters rows before grouping or aggregation.
+   **HAVING** -filters the aggregated result after the GROUP BY.
     
-    **For example** -if I want all employees from the QA department, I use WHERE Department = 'QA'.
+   **For example** -if I want all employees from the QA department, I use WHERE Department = 'QA'.
 
     If I want departments having more than 10 employees, I use:
     
@@ -29,18 +29,18 @@ The main difference is when the filtering happens.
 
 SQL Joins are used to combine data from two or more tables based on a common column or related key. They help retrieve meaningful information that is spread across multiple tables. There are several types of joins:
 
-    **INNER** - Returns only the records that have matching values in both tables.
+   **INNER** - Returns only the records that have matching values in both tables.
                 Example: If you join an Employees table with a Departments table, it returns only employees who are assigned to a department.
     
-    **LEFT** - Returns all records from the left table and the matching records from the right table. If there is no match, the right-side columns                   contain NULL
+   **LEFT** - Returns all records from the left table and the matching records from the right table. If there is no match, the right-side columns                   contain NULL
     
-    **RIGHT** - Returns all records from the right table and the matching records from the left table. If there is no match, the left-side columns                    contain NULL
+   **RIGHT** - Returns all records from the right table and the matching records from the left table. If there is no match, the left-side columns                    contain NULL
     
-    **FULL** - Returns all records from both tables. Where there is no match, the missing side is filled with NULL.
+   **FULL** - Returns all records from both tables. Where there is no match, the missing side is filled with NULL.
     
-    **CROSS** - Returns every possible combination of rows from the two tables, meaning every row from the first table is combined with every row                     from the second table.
+   **CROSS** - Returns every possible combination of rows from the two tables, meaning every row from the first table is combined with every row                     from the second table.
     
-    **SELF** - A table is joined with itself. It is commonly used to represent hierarchical relationships, such as finding an employee's manager from                the same Employees table.
+   **SELF** - A table is joined with itself. It is commonly used to represent hierarchical relationships, such as finding an employee's manager from                the same Employees table.
 
 In real-world projects, I most commonly use INNER JOIN to retrieve matching records and 
 LEFT JOIN when I need all records from one table even if related data is missing. 
