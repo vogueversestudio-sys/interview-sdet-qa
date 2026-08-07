@@ -27,50 +27,25 @@ As an SDET, I use WHERE  while validating API/database data, And HAVING is usefu
 ## Q2. SQL Joins?
 
 
-SQL JOINs are used to combine data from multiple tables based on a common column, usually a primary key and a foreign key. They help us retrieve related information stored across different tables
+SQL Joins are used to combine data from two or more tables based on a common column or related key. They help retrieve meaningful information that is spread across multiple tables. There are several types of joins:
 
-INNER - Only matching rows
-LEFT - Everything from left + matches
-RIGHT - Everything from right + matches
-FULL - Everything from both tables
-CROSS - Every combination
-SELF - Same table joined to itself
+**INNER** - Returns only the records that have matching values in both tables.
+Example: If you join an Employees table with a Departments table, it returns only employees who are assigned to a department.
 
-**All Types with Code:**
+**LEFT** - Returns all records from the left table and the matching records from the right table. If there is no match, the right-side columns contain NULL
 
-```sql
--- 1. INNER JOIN: Only rows that match in BOTH tables
-SELECT e.name, d.dept_name
-FROM employees e
-INNER JOIN departments d ON e.dept_id = d.id;
+**RIGHT** - Returns all records from the right table and the matching records from the left table. If there is no match, the left-side columns contain NULL
 
--- 2. LEFT JOIN: ALL rows from LEFT table + matching from RIGHT (NULL if no match)
--- USE THIS to find employees who have NO department
-SELECT e.name, d.dept_name
-FROM employees e
-LEFT JOIN departments d ON e.dept_id = d.id;
+**FULL** - Returns all records from both tables. Where there is no match, the missing side is filled with NULL.
 
--- 3. RIGHT JOIN: ALL rows from RIGHT table + matching from LEFT
-SELECT e.name, d.dept_name
-FROM employees e
-RIGHT JOIN departments d ON e.dept_id = d.id;
+**CROSS** - Returns every possible combination of rows from the two tables, meaning every row from the first table is combined with every row from the second table.
 
--- 4. FULL OUTER JOIN: ALL rows from BOTH tables (NULL where no match)
-SELECT e.name, d.dept_name
-FROM employees e
-FULL OUTER JOIN departments d ON e.dept_id = d.id;
+**SELF** - A table is joined with itself. It is commonly used to represent hierarchical relationships, such as finding an employee's manager from the same Employees table.
 
--- 5. CROSS JOIN: Every row × every row (Cartesian product)
-SELECT e.name, d.dept_name
-FROM employees e
-CROSS JOIN departments d;
--- 10 employees × 5 departments = 50 rows result
-
--- 6. SELF JOIN: A table joined with ITSELF (manager-employee relationships)
-SELECT e1.name AS employee, e2.name AS manager
-FROM employees e1
-JOIN employees e2 ON e1.manager_id = e2.id;
-```
+In real-world projects, I most commonly use INNER JOIN to retrieve matching records and 
+LEFT JOIN when I need all records from one table even if related data is missing. 
+Self joins are useful for hierarchical data, 
+while Cross and Full Joins are used in specific scenarios depending on the business requirement.
 
 
 ---
