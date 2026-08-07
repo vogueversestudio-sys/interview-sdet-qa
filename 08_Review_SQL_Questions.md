@@ -7,19 +7,19 @@
 
 The main difference is when the filtering happens.
 
-**WHERE** filters rows before grouping or aggregation.
-**HAVING** filters the aggregated result after the GROUP BY.
+    **WHERE** filters rows before grouping or aggregation.
+    **HAVING** filters the aggregated result after the GROUP BY.
+    
+    **For example** if I want all employees from the QA department, I use WHERE Department = 'QA'.
 
-**For example**, if I want all employees from the QA department, I use WHERE Department = 'QA'.
+    If I want departments having more than 10 employees, I use:
+    
+    SELECT Department, COUNT(*)
+    FROM Employee
+    GROUP BY Department
+    HAVING COUNT(*) > 10;
 
-If I want departments having more than 10 employees, I use:
-
-SELECT Department, COUNT(*)
-FROM Employee
-GROUP BY Department
-HAVING COUNT(*) > 10;
-
-As an SDET, I use WHERE  while validating API/database data, And HAVING is useful when validating reporting or analytics data.
+**As an SDET,** I use WHERE  while validating API/database data, And HAVING is useful when validating reporting or analytics data.
 
 
 ---
@@ -29,18 +29,18 @@ As an SDET, I use WHERE  while validating API/database data, And HAVING is usefu
 
 SQL Joins are used to combine data from two or more tables based on a common column or related key. They help retrieve meaningful information that is spread across multiple tables. There are several types of joins:
 
-**INNER** - Returns only the records that have matching values in both tables.
-Example: If you join an Employees table with a Departments table, it returns only employees who are assigned to a department.
-
-**LEFT** - Returns all records from the left table and the matching records from the right table. If there is no match, the right-side columns contain NULL
-
-**RIGHT** - Returns all records from the right table and the matching records from the left table. If there is no match, the left-side columns contain NULL
-
-**FULL** - Returns all records from both tables. Where there is no match, the missing side is filled with NULL.
-
-**CROSS** - Returns every possible combination of rows from the two tables, meaning every row from the first table is combined with every row from the second table.
-
-**SELF** - A table is joined with itself. It is commonly used to represent hierarchical relationships, such as finding an employee's manager from the same Employees table.
+    **INNER** - Returns only the records that have matching values in both tables.
+                Example: If you join an Employees table with a Departments table, it returns only employees who are assigned to a department.
+    
+    **LEFT** - Returns all records from the left table and the matching records from the right table. If there is no match, the right-side columns                   contain NULL
+    
+    **RIGHT** - Returns all records from the right table and the matching records from the left table. If there is no match, the left-side columns                    contain NULL
+    
+    **FULL** - Returns all records from both tables. Where there is no match, the missing side is filled with NULL.
+    
+    **CROSS** - Returns every possible combination of rows from the two tables, meaning every row from the first table is combined with every row                     from the second table.
+    
+    **SELF** - A table is joined with itself. It is commonly used to represent hierarchical relationships, such as finding an employee's manager from                the same Employees table.
 
 In real-world projects, I most commonly use INNER JOIN to retrieve matching records and 
 LEFT JOIN when I need all records from one table even if related data is missing. 
@@ -54,29 +54,31 @@ while Cross and Full Joins are used in specific scenarios depending on the busin
 
 Aggregate functions are SQL functions that perform calculations on a group of rows and return a single summarized value.
 They are mainly used for reporting, data analysis, and validation. 
-Aggregate functions can be used with or without the **GROUP BY** clause. When used with GROUP BY, they return one result for each group.
+Aggregate functions can be used with or without the **GROUP BY** clause. 
+When used with GROUP BY, they return one result for each group.
 
-In automation testing, I use aggregate functions to validate data between the UI, APIs, and the database. For example, I use COUNT() to verify the number of records, SUM() to validate totals in reports, and AVG(), MAX(), or MIN() to ensure calculations are accurate.
 
-The most commonly used aggregate functions are:
+**In automation testing**, I use aggregate functions to validate data between the UI, APIs, and the database. For example, I use COUNT() to verify the number of records, SUM() to validate totals in reports, and AVG(), MAX(), or MIN() to ensure calculations are accurate.
 
-COUNT() – Counts the number of rows.
-SUM() – Returns the total of a numeric column.
-AVG() – Calculates the average value.
-MAX() – Returns the highest value.
-MIN() – Returns the lowest value.
+**The most commonly used aggregate functions are:**
+
+    COUNT() – Counts the number of rows.
+    SUM() – Returns the total of a numeric column.
+    AVG() – Calculates the average value.
+    MAX() – Returns the highest value.
+    MIN() – Returns the lowest value.
 
 Q - Do aggregate functions always require GROUP BY? - 
-No. Aggregate functions can be used without GROUP BY, in which case they return a single result for the entire table. GROUP BY is only needed when you want aggregate results for each group.
+    No. Aggregate functions can be used without GROUP BY, in which case they return a single result for the entire table. GROUP BY is only needed         when you want aggregate results for each group.
 
 ---
 
 ## Q4. What is GROUP BY?
 
-**Simple Answer:**
 GROUP BY is used to group rows that have the same values in one or more columns. It is commonly used with aggregate functions like COUNT(), SUM(), AVG(), MAX(), and MIN() to calculate summary results for each group
 
-In automation testing, I frequently use GROUP BY for database validation.
+
+**In automation testing,** I frequently use GROUP BY for database validation.
 For example, I compare the number of records displayed in the UI or returned by an API with the grouped results from the database. 
 It's also useful for validating reports, dashboards, and business summaries
 
