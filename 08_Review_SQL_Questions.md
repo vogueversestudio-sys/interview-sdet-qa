@@ -150,49 +150,20 @@ This is especially useful when validating reports, dashboards, or comparing inte
 
 ## Q10. RANK() vs DENSE_RANK() vs ROW_NUMBER()?
 
-**Simple Answer:**
-All three assign numbers to rows in order. The difference is what happens when two rows have the same value (a tie):
-- `RANK()` skips numbers after a tie (1, 1, 3, 4)
-- `DENSE_RANK()` does NOT skip numbers (1, 1, 2, 3)
-- `ROW_NUMBER()` always gives a unique number, no ties (1, 2, 3, 4)
+All three are SQL window functions used to assign sequential numbers to rows based on a specific order. The main difference is how they handle duplicate values or ties.
 
-```sql
-SELECT name, salary,
-    RANK()       OVER (ORDER BY salary DESC) AS rank_val,
-    DENSE_RANK() OVER (ORDER BY salary DESC) AS dense_rank_val,
-    ROW_NUMBER() OVER (ORDER BY salary DESC) AS row_num
-FROM employees;
-```
+Salary: 100000, 100000, 90000, 80000
 
-**Result Table — Study This Carefully:**
+ **ROW_NUMBER()** - It assigns a unique number to every row, even if two rows have the same value. There are no duplicate rankings
+                    ROW_NUMBER:1, 2, 3, 4 
 
-| name | salary | RANK | DENSE_RANK | ROW_NUMBER |
-|------|--------|------|------------|------------|
-| Alice | 100000 | 1 | 1 | 1 |
-| Bob | 100000 | 1 | 1 | 2 |
-| Charlie | 90000 | **3** ← skipped 2 | **2** ← no skip | 3 |
-| Dave | 80000 | **4** | **3** | 4 |
+ **RANK()** - It gives the same rank to rows with the same value, but it skips the next rank after a tie.
+               RANK: 1, 1, 3, 4
 
-**Which one to use for Nth highest salary?**
-→ Always use `DENSE_RANK()` — it handles ties correctly and doesn't skip ranks.
+**DENSE_RANK()** - It also gives the same rank for duplicate values, but it does not skip the next rank.
+                  DENSE_RANK:1, 1, 2, 3
 
-```sql
--- Find the 3rd highest salary using DENSE_RANK
-WITH ranked AS (
-    SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk
-    FROM employees
-)
-SELECT DISTINCT salary FROM ranked WHERE rnk = 3;
-```
-
-**💬 How to say it in an interview:**
-> "This is one of the most common SQL interview questions. The key difference is how they handle ties. If I use RANK() to find the 3rd highest salary, and two employees are tied for 1st, then rank 2 is skipped and the next one becomes rank 3 — which is actually the 3rd unique salary value, not the 3rd highest. That's why I always use DENSE_RANK() for the Nth highest salary problem — it never skips numbers, so rank 3 is always the 3rd unique value."
-
-**⚡ Key Points:**
-- RANK(): ties get same number, next number is SKIPPED (1, 1, 3)
-- DENSE_RANK(): ties get same number, NO skip (1, 1, 2) ← use for Nth highest salary
-- ROW_NUMBER(): always unique, no ties at all (1, 2, 3, 4)
-
+  
 ---
 
 ## Q11. DELETE vs TRUNCATE vs DROP?
