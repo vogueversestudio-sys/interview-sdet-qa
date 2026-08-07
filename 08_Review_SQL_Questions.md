@@ -168,59 +168,31 @@ Salary: 100000, 100000, 90000, 80000
 
 ## Q11. DELETE vs TRUNCATE vs DROP?
 
-**Simple Answer:**
-- `DELETE` = remove specific rows (can undo it)
-- `TRUNCATE` = remove ALL rows quickly (usually cannot undo)
-- `DROP` = destroy the entire table including its structure (cannot undo)
+DELETE, TRUNCATE, and DROP are all used to remove data, but they work differently.
 
-**Detailed Comparison:**
+**DELETE** removes specific rows from a table.
+**TRUNCATE** removes all rows from a table but keeps the table structure.
+**DROP** removes the entire table, including its structure and data.
 
-| Aspect | DELETE | TRUNCATE | DROP |
-|--------|--------|----------|------|
-| What is removed | Specific rows (or all rows with no WHERE) | All rows | Entire table (structure + data) |
-| WHERE clause | ✅ Yes | ❌ No | ❌ No |
-| Can rollback? | ✅ Yes (it's DML) | ❌ Usually No | ❌ No |
-| Speed | Slower (logs each row) | Faster (deallocates pages) | Fastest |
-| Fires triggers? | ✅ Yes | ❌ No | ❌ N/A |
-| Resets auto-increment? | ❌ No | ✅ Yes | ❌ N/A |
-| Table still exists after? | ✅ Yes | ✅ Yes | ❌ No |
-| SQL type | DML | DDL | DDL |
+**In automation testing,** I mainly use DELETE to clean up test data after test execution. 
+For example, if a test creates a user or an order, I delete only that specific record using a WHERE clause. 
+I avoid using TRUNCATE because it removes all records and resets identity values, which can affect other tests. 
+DROP is generally used only during database setup or teardown scripts when the entire table needs to be recreated.
 
-```sql
-DELETE FROM employees WHERE dept_id = 5;   -- remove only QA department rows
-TRUNCATE TABLE employees;                   -- wipe the whole table, reset IDs
-DROP TABLE employees;                       -- the table is gone completely
-```
-
-**💬 How to say it in an interview:**
-> "In testing, I use DELETE in my test teardown — to clean up the specific test data I inserted during a test. For example, after creating a test user, I DELETE that specific record by ID. I avoid TRUNCATE in test environments because it removes everything and resets auto-increment. DROP is only used in setup scripts to recreate tables. The key thing interviewers want to hear is: DELETE can be rolled back in a transaction, but TRUNCATE usually cannot."
-
-**⚡ Key Points:**
-- DELETE = surgical, row-by-row, can roll back, can use WHERE
-- TRUNCATE = wipe all rows, reset IDs, faster than DELETE, usually cannot roll back
-- DROP = kills the whole table, gone forever, can't roll back
+DROP is the fastest because it removes the entire table. Among the commands that keep the table, TRUNCATE is faster than DELETE because it removes all rows at once instead of deleting them one by one.
 
 ---
 
 ## Q12. LIKE Operator and Wildcards?
 
-**Simple Answer:**
-LIKE is used for partial text matching. The `%` symbol means "any number of characters" and `_` means "exactly one character."
+The LIKE operator is used to search for a pattern in a text column. It is commonly used for partial string matching. SQL provides two wildcard characters with LIKE:
 
-```sql
-SELECT * FROM employees WHERE name LIKE 'V%';         -- starts with V (e.g., Vikrant)
-SELECT * FROM employees WHERE name LIKE '%kumar';      -- ends with kumar
-SELECT * FROM employees WHERE name LIKE '%vik%';       -- contains "vik" anywhere
-SELECT * FROM employees WHERE name LIKE '_i%';         -- second character is 'i'
-SELECT * FROM employees WHERE email LIKE '%@gmail%';   -- gmail users
-SELECT * FROM employees WHERE name LIKE '___';         -- exactly 3 characters (3 underscores)
-```
+   % → Matches zero or more characters
+   _ → Matches exactly one character
 
-**⚡ Key Points:**
-- `%` = zero or more characters (any text)
-- `_` = exactly one character
-- `LIKE '%abc'` (leading wildcard) cannot use an index — slow on large tables
-- Use `ILIKE` for case-insensitive matching in PostgreSQL
+   In automation testing, I use the LIKE operator to validate partial data stored in the database. For example, I verify email domains, search users by partial names, or check that generated values follow the expected format.
+
+   **ILinke** - ILIKE is a PostgreSQL operator used for case-insensitive pattern matching. For example, ILIKE 'vik%' matches Vikrant, vikrant, or VIKRANT regardless of letter case
 
 ---
 
