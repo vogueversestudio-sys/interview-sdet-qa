@@ -7,10 +7,10 @@
 
 The main difference is when the filtering happens.
 
-    **WHERE** filters rows before grouping or aggregation.
-    **HAVING** filters the aggregated result after the GROUP BY.
+    **WHERE** -filters rows before grouping or aggregation.
+    **HAVING** -filters the aggregated result after the GROUP BY.
     
-    **For example** if I want all employees from the QA department, I use WHERE Department = 'QA'.
+    **For example** -if I want all employees from the QA department, I use WHERE Department = 'QA'.
 
     If I want departments having more than 10 employees, I use:
     
