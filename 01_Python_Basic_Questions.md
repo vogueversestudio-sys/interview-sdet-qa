@@ -1,9 +1,20 @@
 # Python Interview Prep — SDET (8+ Years) — PART 1: BASIC
-## Covers: Noida | Hyderabad | Gurugram | Delhi | Pune | Chennai
+
 
 ---
 
 # SECTION A — BASIC LEVEL (Theoretical)
+
+**Aditya Introduction**
+
+Hi, my name is Aditya Pandey. I have six months of internship experience in software testing. My main work was in manual testing, and I also worked on automation testing.
+
+I am used to working in an Agile team. My technical skills include Playwright for automation, SQL for checking databases, and AI tools to make testing faster. During my internship, I wrote test cases, found and reported bugs, and worked with my team to make sure the product was good quality.
+
+Now I am looking for a job where I can use my skills, keep learning, and be a helpful part of a strong engineering team
+
+
+
 
 ## Q1. What is Python? Why popular for test automation?
 Python is a high-level, interpreted, dynamically-typed language. Popular for SDET because:
