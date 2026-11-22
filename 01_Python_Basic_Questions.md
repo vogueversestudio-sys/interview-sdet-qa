@@ -3,16 +3,18 @@
 # PART 1 - Introduction and Project
 
 ### Q1. Tell me about yourself.
-"I am a QA automation engineer with X years of experience, Y of them in automation. For the last Z years I have worked mainly with Python, Playwright and pytest, building UI, API and end-to-end suites for [product/domain]. I have also worked with Java, Selenium and Cucumber, so I am comfortable across stacks. Recently I have been using Claude and Copilot to speed up test design and script writing. What attracted me to this role is the mix of analytics workflows, automation and quality strategy."
+Hi, I'm Vikrant Mishra. I'm a Senior SDET with 8+ years of experience in web automation, API testing, biometric testing, and AI-assisted testing and knowlage about Capital marketings.
+
+Currently, I am working at Personify Health platform, where I handle UI and API automation using Playwright, Python, and REST Assured. I also contribute to test strategy, mentor QA automation team members, and use AI tools like Windsurf,Claude to improve automation efficiency.
 
 ### Q2. Describe your current project and your role.
-"I work on [product], used by [users]. The team has [N] people. My stack is Python, pytest and Playwright, running in [Jenkins / GitHub Actions] on dev, stage and prod-like environments. I own the automation framework, write UI and API tests, do some manual and exploratory testing, define regression scope and mentor juniors. One result I am proud of: I reduced regression time from X to Y."
+"am a Senior SDET at personifyhealth. I lead a team of 4 qa member and I am the main contact for our client. I built the automation framework with Playwright and Python, and we run it in Jenkins after every build. I also review my team’s work and share test reports with the client. This reduced our testing time and improved release quality."
 
 ### Q3. Which automation framework have you built or owned?
-"I built a Python framework on pytest and Playwright. It has page objects and components, API clients for test setup, data factories, environment config through env variables, and Allure reporting. It runs in parallel with pytest-xdist in CI. It cut regression time from X to Y and brought flaky failures down from X% to Y%."
+"I built a Python framework on pytest and Playwright. It has page objects and components, API clients for test setup, data factories, environment config through env variables, and Allure reporting. It runs in parallel with pytest-xdist in CI. It cut regression time from 1 day to 4 hr and brought flaky failures down from 70% to 80%."
 
 ### Q4. Biggest technical challenge and how you solved it?
-"**Situation:** our regression suite had X% flaky tests and nobody trusted the results. **Task:** I had to bring that down and stabilise the pipeline. **Action:** I classified failures by cause, mostly shared data and fixed waits. I replaced sleeps with web-first assertions, created data per test through the API, and mocked an unstable third-party service. **Result:** flakiness dropped from X% to Y% and runtime fell by Z%."
+"**Situation:** our regression suite had 70-80% flaky tests and nobody trusted the results. **Task:** I had to bring that down and stabilise the pipeline. **Action:** I classified failures by cause, mostly shared data and fixed waits. I replaced sleeps with web-first assertions, created data per test through the API, and mocked an unstable third-party service. **Result:** flakiness dropped from 50% to Y% and runtime fell by 60%."
 
 ### Q5. Which JD requirement is your weakest?
 "I am strongest in Python, Playwright and API testing. Capital markets is newer to me, so I have been studying the trade lifecycle and market data, and I learn domains fast by working closely with product and data teams."
