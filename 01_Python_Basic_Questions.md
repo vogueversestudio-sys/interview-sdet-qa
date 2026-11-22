@@ -3,20 +3,25 @@
 # PART 1 - Introduction and Project
 
 ### Q1. Tell me about yourself.
+
 Hi, I'm Vikrant Mishra. I'm a Senior SDET with 8+ years of experience in web automation, API testing, biometric testing, and AI-assisted testing and knowlage about Capital marketings.
 
 Currently, I am working at Personify Health platform, where I handle UI and API automation using Playwright, Python, and REST Assured. I also contribute to test strategy, mentor QA automation team members, and use AI tools like Windsurf,Claude to improve automation efficiency.
 
 ### Q2. Describe your current project and your role.
+
 "am a Senior SDET at personifyhealth. I lead a team of 4 qa member and I am the main contact for our client. I built the automation framework with Playwright and Python, and we run it in Jenkins after every build. I also review my team’s work and share test reports with the client. This reduced our testing time and improved release quality."
 
 ### Q3. Which automation framework have you built or owned?
+
 "I built a Python framework on pytest and Playwright. It has page objects and components, API clients for test setup, data factories, environment config through env variables, and Allure reporting. It runs in parallel with pytest-xdist in CI. It cut regression time from 1 day to 4 hr and brought flaky failures down from 70% to 80%."
 
 ### Q4. Biggest technical challenge and how you solved it?
+
 "**Situation:** our regression suite had 70-80% flaky tests and nobody trusted the results. **Task:** I had to bring that down and stabilise the pipeline. **Action:** I classified failures by cause, mostly shared data and fixed waits. I replaced sleeps with web-first assertions, created data per test through the API, and mocked an unstable third-party service. **Result:** flakiness dropped from 50% to Y% and runtime fell by 60%."
 
 ### Q5. Which JD requirement is your weakest?
+
 "I am strongest in Python, Playwright and API testing. Capital markets is newer to me, so I have been studying the trade lifecycle and market data, and I learn domains fast by working closely with product and data teams."
 
 ---
@@ -24,15 +29,19 @@ Currently, I am working at Personify Health platform, where I handle UI and API 
 # PART 2 - Playwright with Python
 
 ### Q6. Why Playwright, and what are its key features?
+
 "Playwright gives me auto-waiting, isolated browser contexts, Chromium, Firefox and WebKit through one API, native network interception, built-in API testing, and strong debugging with Trace Viewer, codegen and video."
 
 ### Q7. Explain Browser, BrowserContext and Page.
+
 "A Browser is the browser process. A BrowserContext is an isolated profile with its own cookies and storage, and it is cheap to create. A Page is a tab inside a context. With pytest-playwright every test gets a fresh context, so I get isolation without relaunching the browser."
 
 ### Q8. What is auto-waiting?
+
 "Before every action, Playwright waits until the element is attached, visible, stable, enabled and able to receive events. That removes most explicit waits and a big share of timing flakiness."
 
 ### Q9. Which locators do you prefer?
+
 "I prefer `get_by_role`, `get_by_label`, `get_by_text` and `get_by_test_id`, because they mirror how users find elements and survive DOM changes. CSS and XPath are my last resort."
 ```python
 page.get_by_role("button", name="Run analysis").click()
@@ -40,6 +49,7 @@ page.locator("tr").filter(has_text="AAPL").get_by_role("button", name="Edit").cl
 ```
 
 ### Q10. Web-first assertions: why `expect` instead of `assert`?
+
 "`expect` retries until the condition is true or times out. A plain `assert` on `is_visible()` checks only once, so it is flaky on dynamic pages."
 ```python
 expect(page.get_by_text("Report ready")).to_be_visible()
@@ -47,9 +57,11 @@ expect(page.locator(".row")).to_have_count(5)
 ```
 
 ### Q11. Locator vs ElementHandle?
+
 "Locators are lazy and re-resolve on every action, so they survive re-renders. ElementHandles point to one DOM node and can go stale. I always prefer locators."
 
 ### Q12. How do you reuse login across tests and roles?
+
 "I log in once and save `storage_state` to a file. Then I create contexts from that state, usually in a session-scoped fixture. I keep one state file per role, such as admin, analyst and viewer, and I can open two contexts in one test to verify permissions."
 ```python
 @pytest.fixture(scope="session")
@@ -58,12 +70,14 @@ def browser_context_args(browser_context_args):
 ```
 
 ### Q13. How do you mock or intercept network calls?
+
 "I use `page.route` to fulfill, modify or abort requests. I use it for unstable third-party services, error simulation and edge cases."
 ```python
 page.route("**/api/prices", lambda r: r.fulfill(status=200, json={"AAPL": 190.5}))
 ```
 
 ### Q14. Iframes, popups, dialogs and downloads?
+
 "For iframes I use `frame_locator`. For new tabs, `expect_popup`. For alerts, `page.on('dialog')`. For files, `expect_download`."
 ```python
 page.frame_locator("#chart").get_by_text("Export").click()
@@ -71,21 +85,27 @@ with page.expect_download() as d: page.get_by_text("Download CSV").click()
 ```
 
 ### Q15. Dynamic content and slow loads?
+
 "I rely on auto-wait and `expect`. If I need a specific backend call, I use `page.expect_response`. I avoid `time.sleep`, and I avoid `networkidle` as a default because it is fragile."
 
 ### Q16. Parallel and cross-browser runs?
+
 "I run `pytest -n auto` with xdist and `--browser chromium --browser firefox`. Tests must have independent data. I run the full suite on Chromium and a critical-path suite on Firefox and WebKit."
 
 ### Q17. Does Playwright for Python have built-in retries?
+
 "No. Config-level retries belong to the Node runner. In Python I use pytest-rerunfailures with `--reruns 2`, sparingly, and I report reruns so they do not hide flakiness."
 
 ### Q18. How do you debug Playwright tests?
+
 "I use `PWDEBUG=1` for the Inspector, `--headed --slowmo`, `page.pause()`, and `--tracing retain-on-failure` with `playwright show-trace`. I also capture screenshots and video on failure, and use codegen to find locators."
 
 ### Q19. What does Trace Viewer show?
+
 "An action timeline, DOM snapshots before and after each step, network requests, console logs and the source line. It is the best tool for failures that happen only in CI."
 
 ### Q20. API testing with Playwright?
+
 "I use `playwright.request.new_context`. My favourite pattern is to set up data through the API and verify it in the UI."
 ```python
 api = playwright.request.new_context(base_url=BASE,
@@ -95,15 +115,19 @@ assert r.ok and r.json()["status"] == "NEW"
 ```
 
 ### Q21. Playwright vs Selenium?
+
 "Playwright has built-in auto-wait, fast isolated contexts, tracing, native network control and three engines. Selenium has a bigger ecosystem, Grid, and wider language and legacy-browser support. I choose based on project constraints."
 
 ### Q22. Dynamic tables, date pickers, custom dropdowns?
+
 "For tables I filter rows with `locator('tr').filter(has_text=...)`. For custom dropdowns I click the trigger and then `get_by_role('option', name=...)`. For very large grids I validate against API or DB data instead of scraping every cell."
 
 ### Q23. Running Playwright in CI?
+
 "I install dependencies with `playwright install --with-deps`, run headless, parallelise or shard, and upload traces, videos and reports as artifacts. The official Playwright Python Docker image avoids missing-dependency problems."
 
 ### Q24. Common Playwright mistakes?
+
 "Sleeps, brittle XPath chains, shared state between tests, using `assert` instead of `expect`, logging in through the UI in every test, and relying on `networkidle`."
 
 ---
